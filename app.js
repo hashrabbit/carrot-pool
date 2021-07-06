@@ -14,10 +14,9 @@ const loadConfigJson = (name) => {
 };
 
 const portalConfig = loadConfigJson('server_config.json');
-const poolConfig = loadConfigJson('pool_config.json');
 const baseLogger = new PoolLogger(portalConfig);
-
-finalizePoolConfig({ poolConfig, baseLogger });
+let poolConfig = loadConfigJson('pool_config.json');
+poolConfig = finalizePoolConfig({ portalConfig, poolConfig, baseLogger });
 
 // Ensure our process has an expanded file handle limit.
 setPosixLimit({ baseLogger, isMaster: cluster.isMaster });

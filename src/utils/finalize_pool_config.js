@@ -6,7 +6,8 @@ const defaultDeps = [
 
 // Read and Combine ALL Pool Configurations
 const _finalizePoolConfig = ({ algorithms }) => (env) => {
-  const { baseLogger, poolConfig } = env;
+  let { poolConfig } = env;
+  const { baseLogger, portalConfig } = env;
   const logger = baseLogger.cached('Startup', 'Finalize Config');
   const { algorithm } = poolConfig.coin;
 
@@ -16,6 +17,9 @@ const _finalizePoolConfig = ({ algorithms }) => (env) => {
     logger.error(msg);
     throw new Error(msg);
   }
+
+  // Copy default configs into pool config
+  poolConfig = { ...portalConfig.defaultPoolConfigs, ...poolConfig };
 
   const toBuffer = (value) => Buffer.from(value, 'hex');
   const initNetwork = (network) => {
@@ -27,6 +31,8 @@ const _finalizePoolConfig = ({ algorithms }) => (env) => {
   // Establish Mainnet/Testnet
   if (poolConfig.coin.mainnet) initNetwork(poolConfig.coin.mainnet);
   if (poolConfig.coin.testnet) initNetwork(poolConfig.coin.testnet);
+
+  return poolConfig;
 };
 
 module.exports = {

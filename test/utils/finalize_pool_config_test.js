@@ -14,7 +14,8 @@ describe('finalizePoolConfig -- validate and finish pool connfiguration', () => 
     describe('with no configured coin nets', () => {
       const baseLogger = { cached: () => {} };
       const poolConfig = { coin: { algorithm: algo } };
-      const env = { baseLogger, poolConfig };
+      const portalConfig = { defaultPoolConfig: { extensions: {} } };
+      const env = { portalConfig, baseLogger, poolConfig };
 
       it('returns with no poolConfig changes', () => {
         finalizePoolConfig(env);
@@ -31,7 +32,8 @@ describe('finalizePoolConfig -- validate and finish pool connfiguration', () => 
           testnet: { pubKeyHash, scriptHash: 'C4', bip32: { public: '043587CF' } }
         }
       };
-      const env = { baseLogger, poolConfig };
+      const portalConfig = { defaultPoolConfig: { extensions: {} } };
+      const env = { portalConfig, baseLogger, poolConfig };
 
       it('replaces the testnet settings with their converted values', () => {
         finalizePoolConfig(env);
@@ -47,7 +49,8 @@ describe('finalizePoolConfig -- validate and finish pool connfiguration', () => 
     const logger = { error: sinon.spy() };
     const baseLogger = { cached: () => logger };
     const poolConfig = { coin: { algorithm: algo } };
-    const env = { baseLogger, poolConfig };
+    const portalConfig = { defaultPoolConfig: { extensions: {} } };
+    const env = { portalConfig, baseLogger, poolConfig };
 
     it('logs an errpr and throws', () => {
       const finalizeFunc = () => finalizePoolConfig(env);
