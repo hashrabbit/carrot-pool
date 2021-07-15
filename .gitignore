@@ -1,0 +1,12 @@
+node_modules/
+.idea/
+npm-debug.log
+config.json
+configs/*
+.nyc_output/
+coverage/
+!configs/example.json
+partners/*
+!partners/example.json
+pool_config.json
+server_config.json

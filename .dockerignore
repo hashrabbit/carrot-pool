@@ -1,0 +1,11 @@
+.git/
+node_modules/
+npm-debug.log
+*.json
+!package.json
+!package-lock.json
+configs/*.json
+README.md
+.gitignore
+.eslintrc.js
+

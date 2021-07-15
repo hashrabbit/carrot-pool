@@ -1,0 +1,65 @@
+{
+  "name": "carrot-pool",
+  "version": "0.5.0",
+  "description": "Enterprise proof-of-work infrastructure & API for blockchain mining.",
+  "keywords": [
+    "stratum",
+    "mining",
+    "pool",
+    "server",
+    "poolserver",
+    "bitcoin",
+    "bitcoin-sv"
+  ],
+  "license": "GPL-2.0",
+  "author": "HashRabbit, Inc. (https://hashrabbit.com)",
+  "main": "app.js",
+  "private": true,
+  "homepage": "https://carrot-pool.com/",
+  "repository": "github:hashrabbit/carrot-pool",
+  "bugs": "https://github.com/hashrabbit/carrot-pool/issues",
+  "scripts": {
+    "start": "nodemon app.js",
+    "clean": "eslint . --ext .js --ignore-pattern node_modules/",
+    "test": "mocha --exit 'test/**/**_test.js'",
+    "dot": "mocha --exit --reporter dot 'test/**/**_test.js'",
+    "cover": "nyc --reporter=lcov --reporter=text-summary npm run dot",
+    "prod:start": "forever start -l carrot-pool-log.txt --append app.js",
+    "prod:stop": "forever stop app.js"
+  },
+  "dependencies": {
+    "apicache": "^1.6.2",
+    "babel-eslint": "^10.1.0",
+    "bignum": "^0.13.1",
+    "body-parser": "^1.19.0",
+    "colors": "^1.4.0",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dateformat": "^4.5.1",
+    "express": "^4.17.1",
+    "forever": "^3.0.4",
+    "node-watch": "^0.7.1",
+    "nodemon": "^2.0.7",
+    "redis": "^3.1.2",
+    "redis-clustr": "^1.7.0",
+    "stratum-pool": "git+ssh://git@github.com/hashrabbit/hr-pool-stratum-pool.git"
+  },
+  "engines": {
+    "node": ">= 14.0.0",
+    "npm": ">= 7.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "chai-http": "^4.3.0",
+    "decache": "^4.6.0",
+    "eslint": "^7.17.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "mocha": "^8.2.1",
+    "nyc": "^15.1.0",
+    "redis-mock": "^0.52.0",
+    "sinon": "^9.2.3",
+    "sinon-chai": "^3.5.0"
+  }
+}

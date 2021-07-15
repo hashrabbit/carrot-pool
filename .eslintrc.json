@@ -1,0 +1,35 @@
+{
+    "env": {
+        "node": true
+    },
+    "extends": [
+        "airbnb-base"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 12
+    },
+    "rules": {
+      "comma-dangle": ["error", "only-multiline"],
+      "default-case": "off",
+      "func-names": ["error", "never"],
+      "global-require": "off",
+      "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+      "import/no-unresolved": ["error", { "ignore": ["posix"], "commonjs": true, "caseSensitive": true }],
+      "no-bitwise": "off",
+      "no-console": "off",
+      "no-new": "off",
+      "no-param-reassign": "off",
+      "no-underscore-dangle": "off",
+      "no-unused-vars": ["error", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
+      "object-curly-newline": ["error", {
+        "ObjectExpression": { "multiline": true, "minProperties": 4 },
+        "ExportDeclaration": { "multiline": true, "minProperties": 4 }
+      }]
+    },
+    "overrides": [
+      {
+        "files": ["*_test.js"],
+        "rules": { "no-unused-expressions": "off" }
+      }
+    ]
+}

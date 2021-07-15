@@ -1,0 +1,43 @@
+name: Node.js CI
+
+on: [push]
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Run ssh-agent
+      uses: webfactory/ssh-agent@v0.4.1
+      with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@master
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test
+  coverage:
+    needs: [ test ]
+    name: coverage
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Run ssh-agent
+      uses: webfactory/ssh-agent@v0.4.1
+      with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+    - uses: actions/setup-node@master
+      with:
+        node-version: '12'
+    - run: npm ci
+    - run: npm run build --if-present
+    - uses: paambaati/codeclimate-action@v2.7.5
+      env:
+        CC_TEST_REPORTER_ID: 6358c8707a7c5fbc435aa022b85e4f4175477d2fee8dae3ed5e72195a14f290c
+      with:
+        coverageCommand: npm run cover

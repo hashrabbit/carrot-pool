@@ -1,0 +1,60 @@
+const { describe, it } = require('mocha');
+const sinon = require('sinon');
+
+const { expect } = require('../chai-local');
+
+const { immatureBlock } = require('../../src/payments/immature_block');
+
+describe('immatureBlock() - prepareRounds category function', () => {
+  const feeSatoshi = 0;
+  const coinsToSatoshies = sinon.stub().returnsArg(0);
+  const reward = 0.5;
+  const addr = 'AAAAAA';
+
+  describe('for a soloMined round', () => {
+    const round = { soloMined: true, workerAddress: addr, reward };
+    const solo = { [addr]: 0 };
+    const workers = { [addr]: {} };
+    const env = { workers, coinsToSatoshies, feeSatoshi };
+    const args = { round, solo };
+
+    it('sets immature and roundShares keys on worker', () => {
+      immatureBlock(env)(args);
+      expect(workers[addr].roundShares).to.eql(0);
+      expect(workers[addr].immature).to.eql(1);
+    });
+  });
+
+  describe('for a non-soloMined round, with no lost shares', () => {
+    const round = { reward };
+    const shared = { [addr]: 10 };
+    const workers = { [addr]: {} };
+    const env = { workers, coinsToSatoshies, feeSatoshi };
+    const args = {
+      round, shared, times: {}, maxTime: 1
+    };
+
+    it('sets immature and rounShares keys on worker', () => {
+      immatureBlock(env)(args);
+      expect(workers[addr].roundShares).to.eql(10);
+      expect(workers[addr].immature).to.eql(1);
+    });
+  });
+
+  describe('for a non-soloMined round, with 1 lost share', () => {
+    const round = { reward };
+    const shared = { [addr]: 10 };
+    const workers = { [addr]: {} };
+    const times = { [addr]: 0.5 };
+    const env = { workers, coinsToSatoshies, feeSatoshi };
+    const args = {
+      round, shared, times, maxTime: 1
+    };
+
+    it('sets immature and rounShares keys on worker', () => {
+      immatureBlock(env)(args);
+      expect(workers[addr].roundShares).to.eql(5);
+      expect(workers[addr].immature).to.eql(1);
+    });
+  });
+});
