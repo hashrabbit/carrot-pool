@@ -42,7 +42,7 @@
     "nodemon": "^2.0.7",
     "redis": "^3.1.2",
     "redis-clustr": "^1.7.0",
-    "stratum-pool": "git+ssh://git@github.com/hashrabbit/hr-pool-stratum-pool.git"
+    "stratum-pool": "git+https://github.com/hashrabbit/carrot-pool-stratum.git"
   },
   "engines": {
     "node": ">= 14.0.0",

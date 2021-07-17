@@ -6,7 +6,7 @@ jobs:
   test:
     strategy:
       matrix:
-        node-version: [12.x, 14.x]
+        node-version: [14.x, 16.x]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
@@ -19,7 +19,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
-    - run: npm run build --if-present
     - run: npm test
   coverage:
     needs: [ test ]
@@ -33,11 +32,10 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
     - uses: actions/setup-node@master
       with:
-        node-version: '12'
+        node-version: '14'
     - run: npm ci
-    - run: npm run build --if-present
     - uses: paambaati/codeclimate-action@v2.7.5
       env:
-        CC_TEST_REPORTER_ID: 6358c8707a7c5fbc435aa022b85e4f4175477d2fee8dae3ed5e72195a14f290c
+        CC_TEST_REPORTER_ID: 07bd5ce2da252a1e8b8e4592cb9f455a9886f220d8893e57685cf86af15a4d9a
       with:
         coverageCommand: npm run cover
