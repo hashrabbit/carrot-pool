@@ -15,7 +15,7 @@
 		<img alt="Gitter Chat" src="https://img.shields.io/badge/Gitter-chat-f3015e?style=flat-square&logo=Gitter" />
 	</a>
 	<a href="https://github.com/hashrabbit/carrot-pool/blob/main/LICENSE">
-		<img alt="GNU License" src="https://img.shields.io/badge/License-GPL_3.0-informational?style=flat-square&logo=GNU" />
+		<img alt="GNU License" src="https://img.shields.io/badge/License-GPL_2.0-informational?style=flat-square&logo=GNU" />
 	</a>
 </div>
 
