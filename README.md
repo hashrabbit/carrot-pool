@@ -33,7 +33,7 @@
 		Enterprise proof-of-work infrastructure & API for blockchain mining.
     <br />
 		<!-- setup & usage documentation -->
-    <a href="https://github.com/hashrabbit/carrot-pool/tree/main/docs"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/hashrabbit/carrot-pool/tree/main/INSTALL.md"><strong>Setup & Install »</strong></a>
     <br />
     <br />
     <a href="#">Demo</a>
