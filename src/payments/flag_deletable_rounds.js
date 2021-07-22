@@ -8,7 +8,7 @@ const canDeleteShares = function (compR, rounds) {
   ));
 };
 
-const flagDeletableRounds = ({ rounds }) => {
+const flagDeletableRounds = (rounds) => {
   // Manage Immature Rounds
   rounds.filter((r) => {
     if (['orphan', 'kicked'].includes(r.category)) {

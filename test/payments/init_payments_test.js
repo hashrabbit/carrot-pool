@@ -7,7 +7,7 @@ const { _initPayments } = require('../../src/payments/init_payments');
 
 describe('initPayments() - start the async payment processing timers', () => {
   const client = sinon.stub();
-  const Redis = function () { return client; };
+  const Redis = function () { return { client }; };
   const coinUtils = sinon.stub().returns(0);
   const CoinUtils = function () { return coinUtils; };
   const startPayments = sinon.stub();

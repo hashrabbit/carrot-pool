@@ -31,7 +31,7 @@ describe('fixFailedPayments() - handle negative-confirmation payouts', () => {
       paymentMode,
       coin,
       logger,
-      redisClient: redisStub,
+      client: redisStub,
       daemon: daemonStub
     };
   });

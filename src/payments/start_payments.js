@@ -7,8 +7,8 @@ const defaultDeps = [
 // Extracted from initPayments. Using processPayments, we start the async timers
 // that manage payment processing.
 const _startPayments = ({ processPayments }) => (env) => {
-  const { logger, poolConfig } = env;
-  const { checkInterval, paymentInterval } = poolConfig.paymentProcessing;
+  const { logger, poolOptions } = env;
+  const { checkInterval, paymentInterval } = poolOptions.paymentProcessing;
 
   let checkTimerId;
   let paymentTimerId;
@@ -23,7 +23,7 @@ const _startPayments = ({ processPayments }) => (env) => {
     try {
       await process('start', Date.now());
     } catch (e) {
-      logger.error(e.to_string());
+      logger.error(e.message);
     }
   }, 100);
 
@@ -39,7 +39,7 @@ const _startPayments = ({ processPayments }) => (env) => {
     try {
       await process('payment', Date.now());
     } catch (e) {
-      logger.error(e.to_string());
+      logger.error(e.message);
     }
   }, paymentInterval * 1000);
 

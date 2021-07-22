@@ -15,13 +15,16 @@ const fetchPaidUnpaid = ({ coin, client, logger }) => {
     });
 };
 
-const buildWorkersRounds = ({ coinsToSatoshies }) => (
+const buildWorkersRounds = ({ coinUtils }) => (
   ([unpaid, pending]) => {
     const workers = {};
-    Object.entries(unpaid).forEach((pair) => {
-      const [w, bal] = pair;
-      workers[w] = { balance: coinsToSatoshies(parseFloat(bal)) };
-    });
+
+    if (unpaid) {
+      Object.entries(unpaid).forEach((pair) => {
+        const [w, bal] = pair;
+        workers[w] = { balance: coinUtils.coinsToSatoshies(parseFloat(bal)) };
+      });
+    }
 
     // Convert pending entries into block rounds
     const rounds = pending.map((r) => {

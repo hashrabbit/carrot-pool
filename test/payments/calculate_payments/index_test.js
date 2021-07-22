@@ -28,7 +28,6 @@ describe('calculatePayments() - send payments + make redis records pipeline func
   let preparePaymentsUpdateStub;
   let preparePaymentsUpdateEnvStub;
   let prepareFnStub;
-  let retrier;
   let retryStub;
   let daemon;
 
@@ -62,16 +61,13 @@ describe('calculatePayments() - send payments + make redis records pipeline func
 
     retryStub = sinon.stub();
     retryStub.returns(Promise.resolve());
-    retrier = {
-      retry: retryStub,
-      RetryError
-    };
 
     stubs = {
       buildWorkerRecords: buildWorkerRecordsEnvStub,
       sendPayments: sendPaymentsEnvStub,
       preparePaymentsUpdate: preparePaymentsUpdateEnvStub,
-      retrier
+      retry: retryStub,
+      RetryError
     };
 
     env = {
@@ -152,16 +148,13 @@ describe('calculatePayments() - send payments + make redis records pipeline func
       });
 
       describe('when buildWorkerRecords returns an empty amountsRecords', () => {
-        it('returns its records and rounds with undefined paymentsUpdate arg', () => {
+        it('returns its records and rounds with an empty paymentsUpdate arg', () => {
           const promise = _calculatePayments(stubs)(env)({
             workers,
             rounds,
             addressAccount
           }).then(tryOnce);
-
-          // TODO: I'm almost certain this is supposed to return an empty array instead
-          //       and only 'works' this way by total accident
-          return expect(promise).to.eventually.deep.eql({ workers, rounds });
+          return expect(promise).to.eventually.deep.eql({ workers, rounds, paymentsUpdate: [] });
         });
       });
 

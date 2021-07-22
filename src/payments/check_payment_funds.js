@@ -1,6 +1,12 @@
-const checkPaymentFunds = (env, { listUnspent } = require('./utils')) => {
-  const { logger, satoshisToCoins, minConfPayout, rounds } = env;
+const { requireDeps } = require('../utils/require_deps');
 
+const defaultDeps = [
+  ['listUnspent', `${__dirname}/list_unspent`]
+];
+
+const baseCheckPaymentFunds = ({ listUnspent }) => (env) => {
+  const { logger, coinUtils, minConfPayout, rounds } = env;
+  const { satoshisToCoins } = coinUtils;
   return ({ owed, ...args }) => (
     listUnspent(env)(null, null, minConfPayout, false)
       .catch((err) => {
@@ -25,4 +31,7 @@ const checkPaymentFunds = (env, { listUnspent } = require('./utils')) => {
   );
 };
 
-module.exports = { checkPaymentFunds };
+module.exports = {
+  _checkPaymentFunds: baseCheckPaymentFunds,
+  checkPaymentFunds: baseCheckPaymentFunds(requireDeps(defaultDeps))
+};

@@ -31,7 +31,7 @@ const _initPayments = (deps) => (env) => {
     }
 
     const coin = poolConfig.coin.name;
-    const client = new Redis(portalConfig.redis);
+    const redis = new Redis(portalConfig.redis);
     const coinPrecision = poolConfig.satoshiPrecision || 8;
     const magnitude = 10 ** coinPrecision;
     const minPaymentSatoshis = minimumPayment * magnitude;
@@ -39,7 +39,7 @@ const _initPayments = (deps) => (env) => {
     const startEnv = {
       logger,
       coin,
-      client,
+      client: redis.client,
       daemon,
       coinUtils,
       // Todo: poolOptions is a holdover from multi-coin days. This should be poolConfig,

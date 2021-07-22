@@ -41,4 +41,7 @@ const retry = (n, attemptFn, pred) => {
   });
 };
 
-module.exports = { retry, RetryError };
+module.exports = {
+  retry,
+  RetryError
+};

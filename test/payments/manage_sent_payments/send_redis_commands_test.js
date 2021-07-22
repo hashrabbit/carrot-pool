@@ -30,7 +30,7 @@ describe('sendRedisCommands()', () => {
       coin,
       logger,
       paymentMode: emptyPaymentMode,
-      redisClient: redisStub,
+      client: redisStub,
       fs: fsStub,
       signalStop,
     };

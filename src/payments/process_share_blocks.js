@@ -8,7 +8,7 @@ const processShareBlocks = (env) => {
   const { poolOptions, logger, coin } = env;
 
   const fee = parseFloat(poolOptions.coin.txfee) || parseFloat(0.0004);
-  env.feeSatoshi = env.coinsToSatoshies(fee);
+  env.feeSatoshi = env.coinUtils.coinsToSatoshies(fee);
   env.minConfPayout = Math.max((poolOptions.paymentProcessing.minConf || 10), 1);
   if (env.minConfPayout < 3) {
     logger.warning(`${coin} minConf of 3 is recommended.`);

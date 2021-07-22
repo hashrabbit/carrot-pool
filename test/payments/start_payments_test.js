@@ -13,12 +13,12 @@ describe('startPayments() - start the async payment processing timers', () => {
   const startPayments = _startPayments({ processPayments });
 
   const logger = sinon.stub();
-  const poolConfig = { paymentProcessing: { checkInterval: 0.8, paymentInterval: 0.9 } };
+  const poolOptions = { paymentProcessing: { checkInterval: 0.8, paymentInterval: 0.9 } };
 
   after(() => clock.restore());
 
   it('correctly delegates to paymentProcessing', () => {
-    const { checkTimerId, paymentTimerId } = startPayments({ logger, poolConfig });
+    const { checkTimerId, paymentTimerId } = startPayments({ logger, poolOptions });
     clock.tick(1000);
     clearInterval(checkTimerId);
     clearInterval(paymentTimerId);

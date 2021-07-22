@@ -4,9 +4,10 @@ const sinon = require('sinon');
 const { expect } = require('../chai-local');
 const { listUnspent } = require('../../src/payments/list_unspent');
 
-describe('listUnspet() - wraps daemon.cmd("listunspent") RPC call', () => {
+describe('listUnspent() - wraps daemon.cmd("listunspent") RPC call', () => {
   const coinsRound = sinon.stub().returnsArg(0);
   const coinsToSatoshies = sinon.stub().returnsArg(0);
+  const coinUtils = { coinsRound, coinsToSatoshies };
   const notAddr = 'notAddr';
 
   describe('with no unspent transactions and displayBool is true', () => {
@@ -15,9 +16,7 @@ describe('listUnspet() - wraps daemon.cmd("listunspent") RPC call', () => {
       error: sinon.stub().returnsArg(0),
       special: sinon.stub().returnsArg(0)
     };
-    const env = {
-      daemon, logger, coinsRound, coinsToSatoshies
-    };
+    const env = { daemon, logger, coinUtils };
 
     it('returns a balance of 0 an logs to the "special" severity', () => {
       const result = listUnspent(env)(null, notAddr, 1, true);
@@ -37,9 +36,7 @@ describe('listUnspet() - wraps daemon.cmd("listunspent") RPC call', () => {
       error: sinon.stub().returnsArg(0),
       special: sinon.stub().returnsArg(0)
     };
-    const env = {
-      daemon, logger, coinsRound, coinsToSatoshies
-    };
+    const env = { daemon, logger, coinUtils };
 
     it('returns the total balance and does not log', () => {
       const result = listUnspent(env)(null, notAddr, 1);
@@ -58,9 +55,7 @@ describe('listUnspet() - wraps daemon.cmd("listunspent") RPC call', () => {
       error: sinon.stub().returnsArg(0),
       special: sinon.stub().returnsArg(0)
     };
-    const env = {
-      daemon, logger, coinsRound, coinsToSatoshies
-    };
+    const env = { daemon, logger, coinUtils };
 
     it('catches the error and logs to error', async () => {
       try {

@@ -1,7 +1,8 @@
 // Return the list of unspent balances, via RPC to the coin daemon.
 
 const listUnspent = (env) => {
-  const { daemon, logger, coinsRound, coinsToSatoshies } = env;
+  const { daemon, logger, coinUtils } = env;
+  const { coinsRound, coinsToSatoshies } = coinUtils;
 
   return (addr, notAddr, minConf, displayBool) => {
     let args;

@@ -4,7 +4,8 @@ const defaultDeps = [
   ['buildWorkerRecords', `${__dirname}/build_worker_records`],
   ['sendPayments', `${__dirname}/send_payments`],
   ['preparePaymentsUpdate', `${__dirname}/prepare_payments_update`],
-  ['retrier', `${__dirname}/../../utils/retry`]
+  ['retry', `${__dirname}/../../utils/retry`],
+  ['RetryError', `${__dirname}/../../utils/retry`],
 ];
 
 const roundAmountsRecords = (amountsRecords, coinUtils) => {
@@ -15,8 +16,7 @@ const roundAmountsRecords = (amountsRecords, coinUtils) => {
 
 // Check to Ensure Payments are Being Made
 const baseCalculatePayments = (deps) => (env) => async (args) => {
-  const { buildWorkerRecords, sendPayments, preparePaymentsUpdate, retrier } = deps;
-  const { retry, RetryError } = retrier;
+  const { buildWorkerRecords, sendPayments, preparePaymentsUpdate, retry, RetryError } = deps;
   const { coinUtils, logger, paymentMode } = env;
   const { workers, rounds, addressAccount } = args;
 
@@ -25,8 +25,7 @@ const baseCalculatePayments = (deps) => (env) => async (args) => {
     const workerRecords = buildWorkerRecords(localEnv)(workers);
     const { amountsRecords, totalSent } = workerRecords;
     if (Object.keys(amountsRecords).length === 0) {
-      // TODO(rschifflin): This is missing the third payments arg and I think only works by accident
-      return { workers, rounds };
+      return { workers, rounds, paymentsUpdate: [] };
     }
     roundAmountsRecords(amountsRecords, coinUtils);
     return sendPayments(localEnv)({ addressAccount, amountsRecords, totalSent })

@@ -16,7 +16,7 @@ describe('getWorkersRounds() - processPayments pipeline function', () => {
   const coin = 'carrot';
   const address = 'AAAAAA';
   const env = {
-    coin, client, logger, coinsToSatoshies, invalidateDups
+    coin, client, logger, coinUtils: { coinsToSatoshies }, invalidateDups
   };
 
   beforeEach(() => {

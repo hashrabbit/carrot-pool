@@ -12,7 +12,7 @@ describe('flagDeletableRounds() - validateTransactions sub-function', () => {
     ];
 
     it('flags the round for deleting', () => {
-      flagDeletableRounds({ rounds });
+      flagDeletableRounds(rounds);
       expect(rounds[0].canDeleteShares).to.eql(true);
     });
   });
@@ -24,7 +24,7 @@ describe('flagDeletableRounds() - validateTransactions sub-function', () => {
     ];
 
     it('flags the round for deleting', () => {
-      flagDeletableRounds({ rounds });
+      flagDeletableRounds(rounds);
       expect(rounds[0].canDeleteShares).to.eql(true);
     });
   });
@@ -36,7 +36,7 @@ describe('flagDeletableRounds() - validateTransactions sub-function', () => {
     ];
 
     it('does not flag the round for deleting', () => {
-      flagDeletableRounds({ rounds });
+      flagDeletableRounds(rounds);
       expect(rounds[0].canDeleteShares).to.eql(false);
     });
   });

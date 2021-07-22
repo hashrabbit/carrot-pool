@@ -10,7 +10,8 @@ const isNotOrphaned = (tx) => (typeof tx === 'undefined') || (tx.confirmations !
 
 // Note: Takes no args, everything needed was available in the existing env
 const fixFailedPayments = (env) => async () => {
-  const { paymentMode, redisClient, daemon, logger, coin } = env;
+  const { paymentMode, client, daemon, logger, coin } = env;
+  const redisClient = client;
 
   // NOTE: zrange operates on sorted sets with distinct indices,
   // so the index range (-5, -5) will only cover at most 1 element

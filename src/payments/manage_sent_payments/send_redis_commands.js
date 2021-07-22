@@ -6,10 +6,10 @@ const sendRedisCommands = (env) => async (commands) => {
   const { coin,
     logger,
     signalStop,
-    redisClient,
+    client,
     fs } = env;
 
-  const redisEnv = { client: redisClient, logger };
+  const redisEnv = { client, logger };
   const redisArgs = {
     commands,
     failMsg: `Payments sent but could not update redis.
