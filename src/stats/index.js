@@ -14,7 +14,7 @@ const _defaultDeps = [
 const _poolStats = (deps) => function (env) {
   const { Redis, coinBalances, totalShares, coinStats } = deps;
   const { baseLogger, poolConfig, portalConfig } = env;
-  const coin = poolConfig.coin.name.toLowerCase();
+  const coin = poolConfig.coin.name;
   const redis = new Redis(portalConfig.redis);
 
   redis.attachEvents(baseLogger.cached('Stats', 'Redis'));

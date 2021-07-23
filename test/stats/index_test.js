@@ -18,7 +18,7 @@ describe('PoolStats -- pool stats calulation container', () => {
   const deps = requireDeps(_defaultDeps);
   deps.Redis = sinon.stub().returns(redisStub);
 
-  const coin = 'carrot';
+  const coin = 'Carrot';
   const portalConfig = {
     redis: {},
     stats: {
@@ -30,7 +30,7 @@ describe('PoolStats -- pool stats calulation container', () => {
   };
   const address = 'AABBCCDD';
   const poolConfig = {
-    coin: { name: 'carrot', symbol: 'CRT' },
+    coin: { name: coin, symbol: 'CRT' },
     fees: {},
     ports: {},
     featured: {},

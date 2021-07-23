@@ -40,7 +40,7 @@ const _PoolApi = (deps) => function (env) {
   this.intervalId = intervalId;
   this.listen = () => {
     const { port, host } = portalConfig.server;
-    const { updateInterval } = portalConfig.stats.updateInterval;
+    const { updateInterval } = portalConfig.stats;
 
     // Cache PoolStats data
     poolStats.getGlobalStats();
