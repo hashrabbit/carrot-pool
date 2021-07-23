@@ -1,15 +1,14 @@
 <!-- PROJECT SHIELDS -->
 
-</div>
-	<div align="center" style="margin:15px 0">
+<div align="center" style="margin:15px 0">
 	<a href="https://github.com/hashrabbit/carrot-pool">
 		<img alt="Status" src="https://img.shields.io/badge/Status-preview-white?style=flat-square&logo=Github" />
 	</a>
-	<a href="https://codeclimate.com/repos/5f88d5c6412f89018d00fce7/maintainability">
-		<img alt="Maintainability" src="https://img.shields.io/badge/Maintainability-A-45d198?style=flat-square&logo=CodeClimate" />
+	<a href="https://codeclimate.com/repos/60f64aa8f2379501770010cb/maintainability">
+		<img alt="Maintainability" src="https://img.shields.io/codeclimate/maintainability/hashrabbit/carrot-pool?style=flat-square&logo=CodeClimate" />
 	</a>
-	<a href="https://codeclimate.com/repos/5f88d5c6412f89018d00fce7/test_coverage">
-		<img alt="Test Coverage" src="https://img.shields.io/badge/Test%20Coverage-87%25-green?style=flat-square&logo=CodeClimate" />
+	<a href="https://codeclimate.com/repos/60f64aa8f2379501770010cb/test_coverage">
+		<img alt="Test Coverage" src="https://img.shields.io/codeclimate/coverage/hashrabbit/carrot-pool?style=flat-square&logo=CodeClimate" />
 	</a>
 	<a href="https://gitter.im/hashrabbit/carrot-pool">
 		<img alt="Gitter Chat" src="https://img.shields.io/badge/Gitter-chat-f3015e?style=flat-square&logo=Gitter" />

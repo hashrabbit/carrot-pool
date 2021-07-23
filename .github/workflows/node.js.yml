@@ -36,6 +36,6 @@ jobs:
     - run: npm ci
     - uses: paambaati/codeclimate-action@v2.7.5
       env:
-        CC_TEST_REPORTER_ID: 07bd5ce2da252a1e8b8e4592cb9f455a9886f220d8893e57685cf86af15a4d9a
+        CC_TEST_REPORTER_ID: ab6be7df89409a87a7e4a6096da9fb75b9200c2a3fecbe43da7fd63aec48dcc1
       with:
         coverageCommand: npm run cover
