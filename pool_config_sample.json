@@ -1,16 +1,17 @@
 {
     "enabled": false,
+    "extensions": { "miningCandidateApi": false },
     "featured": true,
     "fees": 1,
     "addresses": {
-        "address": "MMvdRHMDh128QgG2GebQhiUmiV8GCiiB5G",
+        "address": "14JbhdE5QCqm4jmHKaTkfjqNbkqWQCy78E",
         "tAddress": "",
         "zAddress": ""
     },
     "coin": {
         "name": "Carrot",
         "symbol": "CRRT",
-        "algorithm": "scrypt",
+        "algorithm": "sha256",
         "satoshiPrecision": 8,
         "peerMagic": "ace4b9cd",
         "peerMagicTestnet": "f01a6eef",
@@ -96,6 +97,6 @@
         "disableTransactions": true
     },
     "rewardRecipients": {
-        "M8ucqBhn5zfwYiCG6W1KoHZ9buymbedFov": 1
+        "14JbhdE5QCqm4jmHKaTkfjqNbkqWQCy78E": 1
     }
 }
