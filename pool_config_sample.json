@@ -11,7 +11,7 @@
     "coin": {
         "name": "Carrot",
         "symbol": "CRRT",
-        "algorithm": "scrypt",
+        "algorithm": "sha256",
         "satoshiPrecision": 8,
         "peerMagic": "ace4b9cd",
         "peerMagicTestnet": "f01a6eef",
