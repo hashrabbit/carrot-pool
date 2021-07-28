@@ -13,12 +13,12 @@ const stubbedLogger = (severities) => {
 
 describe('processTransaction() - validateTransactions pipeline function', () => {
   const poolOptions = { addresses: { address: 'AAAAAA' } };
-  const coinsRound = sinon.stub().returnsArg(0);
+  const coinUtils = { coinsRound: sinon.stub().returnsArg(0) };
 
   describe('for a valid transaction, with a matching "generate" detail', () => {
     const rounds = [{ txHash: '0000' }];
     const env = {
-      rounds, coinsRound, poolOptions, logger: {}
+      rounds, coinUtils, poolOptions, logger: {}
     };
     const tx = {
       result: {
@@ -37,7 +37,7 @@ describe('processTransaction() - validateTransactions pipeline function', () => 
   describe('for a valid transaction, with a matching "send" detail', () => {
     const rounds = [{ txHash: '0000' }];
     const env = {
-      rounds, coinsRound, poolOptions, logger: {}
+      rounds, coinUtils, poolOptions, logger: {}
     };
     const tx = {
       result: {
@@ -58,7 +58,7 @@ describe('processTransaction() - validateTransactions pipeline function', () => 
     const rounds = [{ txHash: '0000' }];
     const logger = stubbedLogger(['error']);
     const env = {
-      rounds, coinsRound, poolOptions, logger
+      rounds, coinUtils, poolOptions, logger
     };
     const tx = { result: { confirmations: 1, details: [{}, {}] } };
 
@@ -73,7 +73,7 @@ describe('processTransaction() - validateTransactions pipeline function', () => 
     const rounds = [{ txHash: '0000' }];
     const logger = stubbedLogger(['warning']);
     const env = {
-      rounds, coinsRound, poolOptions, logger
+      rounds, coinUtils, poolOptions, logger
     };
     const tx = { result: { details: [] } };
     const arg = sinon.match(/^Invalid transaction details/);

@@ -23,7 +23,7 @@ const _startPayments = ({ processPayments }) => (env) => {
     try {
       await process('start', Date.now());
     } catch (e) {
-      logger.error(e.message);
+      logger.error(e.toString());
     }
   }, 100);
 
@@ -31,7 +31,7 @@ const _startPayments = ({ processPayments }) => (env) => {
     try {
       await process('check', Date.now());
     } catch (e) {
-      logger.error(e.to_string());
+      logger.error(e.toString());
     }
   }, checkInterval * 1000);
 
@@ -39,7 +39,7 @@ const _startPayments = ({ processPayments }) => (env) => {
     try {
       await process('payment', Date.now());
     } catch (e) {
-      logger.error(e.message);
+      logger.error(e.toString());
     }
   }, paymentInterval * 1000);
 

@@ -19,14 +19,14 @@ describe('prepareRounds() - processShareBlocks pipeline function', () => {
 
   describe('for a single, "immature" round, that can be auto-payed', () => {
     const rounds = [{ height: 111, category: 'immature' }];
-    const allSolo = [[1]];
-    const allShared = [[]];
-    const allTimes = [{ AAAAAA: 0 }];
+    const solo = [[1]];
+    const shared = [[]];
+    const times = [{ AAAAAA: 0 }];
     const logger = { error: sinon.stub().returnsArg(0) };
     const env = {
       client, coin, objectSize, immatureBlock, confirmedBlock, logger, rounds
     };
-    const args = { allSolo, allShared, allTimes };
+    const args = { solo, shared, times };
 
     beforeEach(() => client.flushall(() => {}));
 
@@ -42,14 +42,14 @@ describe('prepareRounds() - processShareBlocks pipeline function', () => {
 
   describe('for a single round, needing manual payout', () => {
     const rounds = [{ height: 111, serialized: 'round_1' }];
-    const allSolo = [[]];
-    const allShared = [[]];
-    const allTimes = [];
+    const solo = [[]];
+    const shared = [[]];
+    const times = [];
     const logger = { error: sinon.stub().returnsArg(0) };
     const env = {
       client, coin, objectSize, immatureBlock, confirmedBlock, logger, rounds
     };
-    const args = { allSolo, allShared, allTimes };
+    const args = { solo, shared, times };
 
     beforeEach(() => {
       client.flushall(() => {});

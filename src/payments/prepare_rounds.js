@@ -59,7 +59,7 @@ const prepareRounds = (
   const { rounds } = env;
 
   return (args) => {
-    const { allSolo, allShared } = args;
+    const { times: allTimes, solo: allSolo, shared: allShared } = args;
     const manual = [];
     const auto = [];
 
@@ -69,7 +69,14 @@ const prepareRounds = (
       if (totalShares <= 0) { manual.push(round); } else { auto.push({ round, i }); }
     });
 
-    prepareAutoBlocks({ ...args, immatureBlock, confirmedBlock })(auto);
+    prepareAutoBlocks({
+      allTimes,
+      allSolo,
+      allShared,
+      immatureBlock,
+      confirmedBlock,
+      ...env
+    })(auto);
     return moveManualBlocks(env)(manual);
   };
 };

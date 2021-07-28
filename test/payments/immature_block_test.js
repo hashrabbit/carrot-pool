@@ -7,7 +7,7 @@ const { immatureBlock } = require('../../src/payments/immature_block');
 
 describe('immatureBlock() - prepareRounds category function', () => {
   const feeSatoshi = 0;
-  const coinsToSatoshies = sinon.stub().returnsArg(0);
+  const coinUtils = { coinsToSatoshies: sinon.stub().returnsArg(0) };
   const reward = 0.5;
   const addr = 'AAAAAA';
 
@@ -15,7 +15,7 @@ describe('immatureBlock() - prepareRounds category function', () => {
     const round = { soloMined: true, workerAddress: addr, reward };
     const solo = { [addr]: 0 };
     const workers = { [addr]: {} };
-    const env = { workers, coinsToSatoshies, feeSatoshi };
+    const env = { workers, coinUtils, feeSatoshi };
     const args = { round, solo };
 
     it('sets immature and roundShares keys on worker', () => {
@@ -29,7 +29,7 @@ describe('immatureBlock() - prepareRounds category function', () => {
     const round = { reward };
     const shared = { [addr]: 10 };
     const workers = { [addr]: {} };
-    const env = { workers, coinsToSatoshies, feeSatoshi };
+    const env = { workers, coinUtils, feeSatoshi };
     const args = {
       round, shared, times: {}, maxTime: 1
     };
@@ -46,12 +46,12 @@ describe('immatureBlock() - prepareRounds category function', () => {
     const shared = { [addr]: 10 };
     const workers = { [addr]: {} };
     const times = { [addr]: 0.5 };
-    const env = { workers, coinsToSatoshies, feeSatoshi };
+    const env = { workers, coinUtils, feeSatoshi };
     const args = {
       round, shared, times, maxTime: 1
     };
 
-    it('sets immature and rounShares keys on worker', () => {
+    it('sets immature and roundShares keys on worker', () => {
       immatureBlock(env)(args);
       expect(workers[addr].roundShares).to.eql(5);
       expect(workers[addr].immature).to.eql(1);

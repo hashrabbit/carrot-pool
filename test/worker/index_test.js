@@ -150,25 +150,25 @@ describe('PoolWorker() - Stratum pool worker thread', () => {
     describe('on share', () => {
       let isValidShare;
       let isValidBlock;
-      let data;
+      let shareData;
 
       beforeEach(() => {
         isValidShare = true;
         isValidBlock = true;
-        data = {};
+        shareData = {};
       });
 
       it('forwards the share data to the share logger', () => {
-        pool.emit('share', isValidShare, isValidBlock, data);
-        const args = [isValidShare, isValidBlock, data];
+        pool.emit('share', isValidShare, isValidBlock, shareData);
+        const args = [isValidShare, isValidBlock, shareData];
         expect(logShareEnvStub).to.have.been.calledWith({ logger: cachedLogger });
         expect(logShareStub).to.have.been.calledWith(...args);
       });
 
       it('forwards the share data to the shares processor', () => {
-        pool.emit('share', isValidShare, isValidBlock, data);
-        const args = [isValidShare, isValidBlock, data];
-        expect(sharesProcessor.handleShare).to.have.been.calledWith(...args);
+        pool.emit('share', isValidShare, isValidBlock, shareData);
+        const args = { isValidShare, isValidBlock, shareData };
+        expect(sharesProcessor.handleShare).to.have.been.calledWith(args);
       });
     });
   });

@@ -71,7 +71,8 @@ const adjustedAmount = (env) => {
 };
 
 const confirmedBlock = (env) => {
-  const { logger, coinsToSatoshies, satoshisToCoins, feeSatoshi, workers } = env;
+  const { logger, coinUtils, feeSatoshi, workers } = env;
+  const { coinsToSatoshies, satoshisToCoins } = coinUtils;
 
   return ({ round, shared, solo, times, maxTime }) => {
     const reward = Math.round(coinsToSatoshies(round.reward) - feeSatoshi);

@@ -53,8 +53,11 @@ const basePoolWorker = (deps) => function (env) {
     const sharesProcessor = new PoolShares({ logger: baseLogger, poolConfig, portalConfig });
 
     const handleShare = (...args) => {
-      sharesProcessor.handleShare(...args)
-        .catch((e) => `Share handling event failed.\nEvent args: ${args}\nEvent err: ${e}`);
+      const [isValidShare, isValidBlock, shareData] = args;
+      sharesProcessor.handleShare({ isValidShare, isValidBlock, shareData })
+        .catch((e) => {
+          logger.error(`Share handling event failed.\nEvent args: ${args}\nEvent err: ${e}`);
+        });
     };
 
     // Establish Pool Share Handling

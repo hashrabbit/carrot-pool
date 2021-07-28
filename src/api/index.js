@@ -50,7 +50,7 @@ const _PoolApi = (deps) => function (env) {
       try {
         await poolStats.getGlobalStats();
       } catch (e) {
-        logger.error(e.to_string());
+        logger.error(e.toString());
       }
     }, updateInterval * 1000);
 

@@ -9,6 +9,7 @@ describe('confirmedBlock() - prepareRounds category function', () => {
   const feeSatoshi = 0;
   const coinsToSatoshies = sinon.stub().returnsArg(0);
   const satoshisToCoins = sinon.stub().returnsArg(0);
+  const coinUtils = { coinsToSatoshies, satoshisToCoins };
   const reward = 0.5;
   const addr = 'AAAAAA';
 
@@ -18,9 +19,7 @@ describe('confirmedBlock() - prepareRounds category function', () => {
     };
     const solo = { [addr]: 1 };
     const workers = { [addr]: {} };
-    const env = {
-      workers, satoshisToCoins, coinsToSatoshies, feeSatoshi
-    };
+    const env = { workers, coinUtils, feeSatoshi };
     const args = { round, solo };
 
     it('sets reward, roundShares, and totalShares keys on worker', () => {
@@ -36,7 +35,7 @@ describe('confirmedBlock() - prepareRounds category function', () => {
     const workers = { [addr]: {} };
     const logger = { error: sinon.stub().returnsArg(0) };
     const env = {
-      logger, workers, coinsToSatoshies, satoshisToCoins, feeSatoshi
+      logger, workers, coinUtils, feeSatoshi
     };
     const args = {
       round, shared, times: {}, maxTime: 1
@@ -56,7 +55,7 @@ describe('confirmedBlock() - prepareRounds category function', () => {
     const times = { [addr]: 0.5 };
     const logger = { error: sinon.stub().returnsArg(0) };
     const env = {
-      logger, workers, coinsToSatoshies, satoshisToCoins, feeSatoshi
+      logger, workers, coinUtils, feeSatoshi
     };
     const args = {
       round, shared, times, maxTime: 1
