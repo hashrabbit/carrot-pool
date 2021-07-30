@@ -10,3 +10,4 @@ partners/*
 !partners/example.json
 pool_config.json
 server_config.json
+.env
