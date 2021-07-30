@@ -1,0 +1,49 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Install Dependencies
+          command: npm install
+      - run:
+          name: Migrate Database
+          command: npm run db:migrate
+      #- run:
+          #name: Sync Egifter Catalog and Other Test Database Seeding
+          #command: npm run db:seed
+      - run:
+          name: Run Tests
+          command: NODE_ENV=test npm test
+      - run:
+          name: Build docker image
+          command: docker build -t anypay/pool.paypow.com . 
+      - run:
+          name: Push to Docker Hub
+          command: |
+            ./push_to_docker.sh
+  deploy:
+    machine:
+      image: ubuntu-1604:202007-01
+    steps:
+      - run:
+          name: Chef Client Update Live Container
+          command: ssh ubuntu@paypow.com "sudo chef-client -o recipe[pool.paypow.com]"
+
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+
+
