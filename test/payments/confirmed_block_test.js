@@ -68,4 +68,25 @@ describe('confirmedBlock() - prepareRounds category function', () => {
       expect(workers[addr].records[1].amounts).to.eql(2);
     });
   });
+
+  describe('for a shared round, with a new worker', () => {
+    const round = { reward: 1.5, height: 1 };
+    const shared = { [addr]: 10 };
+    const times = { [addr]: 0.5 };
+    const workers = { };
+    const logger = { error: sinon.stub().returnsArg(0) };
+    const env = {
+      logger, workers, coinUtils, feeSatoshi
+    };
+    const args = {
+      round, shared, times, maxTime: 1
+    };
+
+    it('sets the correct key/value pairs on the worker object.', () => {
+      confirmedBlock(env)(args);
+      expect(workers[addr].roundShares).to.eql(5);
+      expect(workers[addr].records[1].shares).to.eql(10);
+      expect(workers[addr].records[1].amounts).to.eql(2);
+    });
+  });
 });

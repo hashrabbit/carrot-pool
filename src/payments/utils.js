@@ -9,6 +9,18 @@ const roundTo = (n, digits) => {
   return +(test.toFixed(digits));
 };
 
+// Returns the value at the given key from the given object if present.
+// Otherwise mutates the given object by inserting an empty object with the missing key,
+// and returns the newly-inserted empty object.
+const findOrNew = (obj, key) => {
+  let value = obj[key];
+  if (typeof value === 'undefined') {
+    value = {};
+    obj[key] = value;
+  }
+  return value;
+};
+
 // Check for Block Duplicates
 const isDuplicateBlockHeight = (rounds, height) => {
   const dups = rounds.filter((round) => round.height === height);
@@ -110,12 +122,12 @@ const fixFailedPayments = (redisClient, daemon, logger, coin) => {
 };
 
 const calculateTotalOwed = (env) => {
-  const { feeSatoshi, coinsToSatoshies, workers, rounds } = env;
+  const { feeSatoshi, coinUtils, workers, rounds } = env;
 
   return (args) => {
     let owed = rounds
       .filter((r) => (r.category === 'generate'))
-      .reduce((acc, r) => acc + coinsToSatoshies(r.reward) - feeSatoshi, 0);
+      .reduce((acc, r) => acc + coinUtils.coinsToSatoshies(r.reward) - feeSatoshi, 0);
 
     Object.values(workers).forEach((worker) => {
       owed += (worker.balance || 0);
@@ -126,6 +138,7 @@ const calculateTotalOwed = (env) => {
 
 module.exports = {
   roundTo,
+  findOrNew,
   isDuplicateBlockHeight,
   validateAddress,
   getBalance,

@@ -8,11 +8,12 @@ const { calculateTotalOwed } = require('../../src/payments/utils');
 describe('calculateTotalOwed() - processShareBlocks pipeline function', () => {
   const feeSatoshi = 3;
   const coinsToSatoshies = sinon.stub().returnsArg(0);
+  const coinUtils = { coinsToSatoshies };
 
   describe('for 1 round and no workers', () => {
     const rounds = [{ category: 'generate', reward: 5 }];
     const env = {
-      feeSatoshi, coinsToSatoshies, rounds, workers: {}
+      feeSatoshi, coinUtils, rounds, workers: {}
     };
 
     it('retuns owed == 2', () => {
@@ -24,7 +25,7 @@ describe('calculateTotalOwed() - processShareBlocks pipeline function', () => {
   describe('for 1 round and 1 worker balance', () => {
     const rounds = [{ category: 'generate', reward: 5 }];
     const env = {
-      feeSatoshi, coinsToSatoshies, rounds, workers: { a: { balance: 1 } }
+      feeSatoshi, coinUtils, rounds, workers: { a: { balance: 1 } }
     };
 
     it('retuns owed == 3', () => {

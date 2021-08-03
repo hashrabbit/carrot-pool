@@ -1,4 +1,4 @@
-const { roundTo } = require('./utils.js');
+const { roundTo, findOrNew } = require('./utils.js');
 
 // Callback to Object.entries(times).reduce()
 // Calculates the adjusted time value, associated with each worker address.
@@ -33,9 +33,9 @@ const adjustedShare = (env) => {
   const { logger, round, workers, times, maxTime } = env;
 
   return ([addr, shares]) => {
-    const worker = (workers[addr] || {});
+    const worker = findOrNew(workers, addr);
     shares = parseFloat((shares || 0));
-    worker.records = workers[addr].records || {};
+    worker.records = (worker.records || {});
     worker.records[round.height] = { shares, amounts: 0, times: 0 };
     if (maxTime > 0) {
       const lost = lostShares(shares, worker.records[round.height], times[addr], maxTime);
@@ -59,7 +59,7 @@ const adjustedAmount = (env) => {
   const { logger, workers, round, totalShares, reward, satoshisToCoins } = env;
 
   return (addr) => {
-    const worker = (workers[addr] || {});
+    const worker = findOrNew(workers, addr);
     const percent = parseFloat(worker.roundShares) / totalShares;
     if (percent > 1.0) {
       logger.error(`Share percent is greater than 1.0 for ${addr} round:${round.height} blockHash:${round.blockHash}`);
@@ -80,10 +80,10 @@ const confirmedBlock = (env) => {
     // Check if Solo Mined
     if (round.soloMined) {
       const addr = round.workerAddress;
-      const worker = (workers[addr] || {});
+      const worker = findOrNew(workers, addr);
       const shares = parseFloat((solo[addr] || 0));
       const amounts = satoshisToCoins(reward);
-      worker.records = (workers[addr].records || {});
+      worker.records = (worker.records || {});
       worker.records[round.height] = { shares, amounts, times: 1 };
       worker.roundShares = shares;
       worker.totalShares = parseFloat(worker.totalShares || 0) + shares;
