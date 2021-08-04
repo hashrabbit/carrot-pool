@@ -30,9 +30,45 @@ describe('fillWorkerRecords() - use individual worker data plus accumulated work
     address = '';
   });
 
-  describe('when the total # of satoshis for a given address is below the payment threshold', () => {
+  describe('when the worker address does not match the format of a base58 bitcoin address', () => {
     beforeEach(() => {
       address = 'workerAddress';
+      workerTotals[address] = 123;
+    });
+
+    it("marks the worker as not being paid out this round with 'sent' as 0", () => {
+      fillWorkerRecords(worker, workerRecords, workerTotals, toSendSatoshis, coinUtils, address);
+      expect(worker.sent).to.eql(0);
+    });
+
+    describe('with a worker who earned a reward', () => {
+      const balance = 5.0;
+      const reward = 1.5;
+      const existingUnpaidRecord = 47.2;
+
+      beforeEach(() => {
+        workerRecords.unpaidRecords[address] = existingUnpaidRecord;
+        worker = { balance };
+
+        // Result of old owed balance + new reward, scaled by withholding and rounded
+        toSendSatoshis = balance + reward;
+      });
+
+      it('sets an owed balance change to reflect the new reward in satoshis', () => {
+        fillWorkerRecords(worker, workerRecords, workerTotals, toSendSatoshis, coinUtils, address);
+        expect(worker.balanceChange).to.eql(reward);
+      });
+
+      it('updates the unpaid records to reflect the new reward in coins', () => {
+        fillWorkerRecords(worker, workerRecords, workerTotals, toSendSatoshis, coinUtils, address);
+        expect(workerRecords.unpaidRecords[address]).to.eql(existingUnpaidRecord + (reward * 0.1));
+      });
+    });
+  });
+
+  describe('when the total # of satoshis for a given address is below the payment threshold', () => {
+    beforeEach(() => {
+      address = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
       workerTotals[address] = 0.99;
     });
 
@@ -66,12 +102,13 @@ describe('fillWorkerRecords() - use individual worker data plus accumulated work
     });
   });
 
-  describe('when the total # of satoshis for a given address meets the payment threshold', () => {
+  describe('when the total # of satoshis for a given address meets the payment threshold'
+    + ' and the address appears legal', () => {
     const sentSatoshis = 101;
     const currentTotalSent = 994;
 
     beforeEach(() => {
-      address = 'workerAddress';
+      address = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
       workerTotals[address] = 1.00;
       workerRecords.totalSent = currentTotalSent;
       toSendSatoshis = sentSatoshis;

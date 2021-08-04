@@ -24,15 +24,15 @@ const updateWorkerPayoutBalances = (env) => (workers) => {
         totalPaid = coinsRound(totalPaid + worker.sent);
       }
     } else if ((worker.reward || 0) > 0) {
-      worker.reward = satoshisToCoins(worker.reward);
-      balanceUpdateCommands.push(['hset', `${coin}:payments:balances`, w, coinsRound(worker.reward)]);
+      const reward = satoshisToCoins(worker.reward);
+      balanceUpdateCommands.push(['hset', `${coin}:payments:balances`, w, coinsRound(reward)]);
     } else {
       balanceUpdateCommands.push(['hset', `${coin}:payments:balances`, w, 0]);
     }
 
     if ((worker.immature || 0) > 0) {
-      worker.immature = satoshisToCoins(worker.immature);
-      immatureUpdateCommands.push(['hset', `${coin}:payments:immature`, w, coinsRound(worker.immature)]);
+      const immature = satoshisToCoins(worker.immature);
+      immatureUpdateCommands.push(['hset', `${coin}:payments:immature`, w, coinsRound(immature)]);
     } else {
       immatureUpdateCommands.push(['hset', `${coin}:payments:immature`, w, 0]);
     }

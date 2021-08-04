@@ -13,7 +13,7 @@ describe('initPayments() - start the async payment processing timers', () => {
   const startPayments = sinon.stub();
   const deps = { Redis, CoinUtils, startPayments };
 
-  const logger = { error: sinon.stub() };
+  const logger = { warning: sinon.stub() };
   const poolConfig = {
     coin: { name: 'coin' },
     addresses: { address: 'AAAAAA' },
@@ -43,9 +43,9 @@ describe('initPayments() - start the async payment processing timers', () => {
     const Daemon = function () { return daemon; };
     const initPayments = _initPayments({ ...deps, Daemon });
 
-    it('returns false, without starting payment processing', () => (
-      expect(initPayments(env)).to.eventually.eql(false).then(() => (
-        expect(logger.error).to.have.been.calledOnce
+    it('warns the user, but continues payment processing', () => (
+      expect(initPayments(env)).to.eventually.eql(true).then(() => (
+        expect(logger.warning).to.have.been.calledOnce
       ))
     ));
   });

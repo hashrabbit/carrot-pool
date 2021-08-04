@@ -24,16 +24,14 @@ const fixFailedPayments = (env) => async () => {
     if (typeof result === 'undefined') { return []; }
 
     const payment = JSON.parse(result);
-    return daemon.cmd(
-      'gettransaction',
-      [payment.txid],
-      ([rpcResult]) => [payment, rpcResult.response]
-    );
+    return daemon.rpcCmd('gettransaction', [payment.txid]).then(([rpcResult]) => (
+      [payment, rpcResult.response]
+    ));
   };
 
   const resendOrphanedPayment = async (payment) => {
     const rpccallTracking = `sendmany "" ${JSON.stringify(payment.amounts)}`;
-    return daemon.cmd('sendmany', ['', payment.amounts], (sendResult) => {
+    return daemon.rpcCmd('sendmany', ['', payment.amounts], true, true).then((sendResult) => {
       if (sendResult.error) {
         logger.warning(rpccallTracking);
         logger.error(`Error sending payments ${JSON.stringify(sendResult.error)}`);
@@ -46,7 +44,7 @@ const fixFailedPayments = (env) => async () => {
       }
       logger.special(`Resent payment to ${Object.keys(payment.amounts).length} miners; ${payment.txid} -> ${sendResult.response}`);
       return [payment, sendResult.response];
-    }, true, true);
+    });
   };
 
   const redisAddNewPayment = async ([oldPayment, newTx]) => {

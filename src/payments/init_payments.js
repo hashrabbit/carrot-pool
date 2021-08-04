@@ -22,12 +22,11 @@ const _initPayments = (deps) => (env) => {
   const daemon = new Daemon({ configs: [daemonConfig], logger });
 
   return daemon.isValidAddress(address).then((isValid) => {
-    // If validating our wallet address fails, exit payment setup. Log the invalid
-    // address and exit without enabling processPayments.
+    // If validating our wallet address fails, log the invalid
+    // address and warn the user.
     if (!isValid) {
-      const msg = `initPayments: invalid pool address "${address}" - payment processing disabled`;
-      logger.error(msg);
-      return false;
+      const msg = `initPayments: Could not validate pool address "${address}" - Ensure the pool owns this address!`;
+      logger.warning(msg);
     }
 
     const coin = poolConfig.coin.name;

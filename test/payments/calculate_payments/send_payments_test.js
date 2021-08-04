@@ -22,8 +22,8 @@ describe('sendPayments() - async call to daemon to send worker payments ', () =>
     addressAccount = 'addressAccount';
     amountsRecords = {};
     totalSent = 0.0;
-    daemonStub = { cmd: sinon.stub() };
-    daemonStub.cmd.onCall(0).callsArgWith(2, { response: 'daemon succeeded' });
+    daemonStub = { rpcCmd: sinon.stub() };
+    daemonStub.rpcCmd.onCall(0).resolves({ response: 'daemon succeeded' });
 
     env = {
       daemon: daemonStub,
@@ -36,11 +36,10 @@ describe('sendPayments() - async call to daemon to send worker payments ', () =>
   it('calls out to the daemon', () => {
     const promise = sendPayments(env)({ addressAccount, amountsRecords, totalSent });
     return expect(promise).to.eventually.be.fulfilled.then(() => {
-      expect(daemonStub.cmd.getCall(0).args[0]).to.eql('sendmany');
-      expect(daemonStub.cmd.getCall(0).args[1]).to.eql([addressAccount, amountsRecords]);
-      expect(daemonStub.cmd.getCall(0).args[2]).to.be.an.instanceOf(Function);
-      expect(daemonStub.cmd.getCall(0).args[3]).to.eql(true);
-      expect(daemonStub.cmd.getCall(0).args[4]).to.eql(true);
+      expect(daemonStub.rpcCmd.getCall(0).args[0]).to.eql('sendmany');
+      expect(daemonStub.rpcCmd.getCall(0).args[1]).to.eql([addressAccount, amountsRecords]);
+      expect(daemonStub.rpcCmd.getCall(0).args[2]).to.eql(true);
+      expect(daemonStub.rpcCmd.getCall(0).args[3]).to.eql(true);
     });
   });
 
@@ -61,7 +60,7 @@ describe('sendPayments() - async call to daemon to send worker payments ', () =>
     };
 
     beforeEach(() => {
-      daemonStub.cmd.onCall(0).callsArgWith(2, insufficientFundsError);
+      daemonStub.rpcCmd.onCall(0).resolves(insufficientFundsError);
     });
 
     it('rejects with a Retry! error to indicate it should be retried with more withheld', () => {
@@ -73,7 +72,7 @@ describe('sendPayments() - async call to daemon to send worker payments ', () =>
   describe('when the send attempt fails with any other error', () => {
     const otherError = { error: 'the sun was in my eyes' };
     beforeEach(() => {
-      daemonStub.cmd.onCall(0).callsArgWith(2, otherError);
+      daemonStub.rpcCmd.onCall(0).resolves(otherError);
     });
 
     it('rejects without retrying', () => {

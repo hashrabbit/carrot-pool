@@ -38,6 +38,7 @@ const processTransaction = ({ rounds, coinUtils, logger, poolOptions }) => (
     }
 
     // Update Round Category/Reward
+    // NOTE: round.reward is in units of COINS
     round.category = detailForAddr.category;
     if ((round.category === 'generate') || (round.category === 'immature')) {
       round.reward = coinUtils.coinsRound(parseFloat(detailForAddr.amount || detailForAddr.value));

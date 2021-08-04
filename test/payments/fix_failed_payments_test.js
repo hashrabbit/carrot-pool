@@ -23,8 +23,8 @@ describe('fixFailedPayments() - handle negative-confirmation payouts', () => {
     redisStub.zadd.onCall(0).callsArgWith(3, null);
     redisStub.zremrangebyscore.onCall(0).callsArgWith(3, null);
 
-    daemonStub = { cmd: sinon.stub() };
-    daemonStub.cmd.onCall(0).callsArgWith(2, null, 'daemon succeeded');
+    daemonStub = { rpcCmd: sinon.stub() };
+    daemonStub.rpcCmd.onCall(0).resolves('daemon succeeded');
     clock = sinon.useFakeTimers();
 
     env = {
@@ -44,7 +44,7 @@ describe('fixFailedPayments() - handle negative-confirmation payouts', () => {
     it('resolves without any updates to redis or the coin daemon', () => {
       const promise = fixFailedPayments(env)();
       return expect(promise).to.eventually.be.fulfilled.then(() => {
-        expect(daemonStub.cmd).not.to.have.been.called;
+        expect(daemonStub.rpcCmd).not.to.have.been.called;
         expect(redisStub.zrange).not.to.have.been.called;
       });
     });
@@ -69,48 +69,48 @@ describe('fixFailedPayments() - handle negative-confirmation payouts', () => {
 
       beforeEach(() => {
         redisStub.zrange.onCall(0).callsArgWith(3, null, [jsonRecord]);
-        daemonStub.cmd.onCall(0).callsArgWith(2, [{ response: { transaction: null } }]);
+        daemonStub.rpcCmd.onCall(0).resolves([{ response: { transaction: null } }]);
       });
 
       it("attempts to fetch each record's parsed transaction id from the daemon", () => {
         const promise = fixFailedPayments(env)();
-        const pending = promise.then(() => daemonStub.cmd.getCall(0).args.slice(0, 2));
+        const pending = promise.then(() => daemonStub.rpcCmd.getCall(0).args.slice(0, 2));
         return expect(pending).to.eventually.eql(['gettransaction', ['tx1']]);
       });
 
       describe('When transactions have non-negative confirmations', () => {
         beforeEach(() => {
-          daemonStub.cmd.onCall(0).callsArgWith(2, [{ response: { confirmations: 0 } }]);
+          daemonStub.rpcCmd.onCall(0).resolves([{ response: { confirmations: 0 } }]);
         });
 
         it('does not call sendmany', () => {
           const promise = fixFailedPayments(env)();
-          const pending = promise.then(() => daemonStub.cmd.getCall(0).args[0]);
+          const pending = promise.then(() => daemonStub.rpcCmd.getCall(0).args[0]);
           return expect(pending).not.to.eventually.eql('sendmany').then(() => {
-            expect(daemonStub.cmd).to.have.been.calledOnce;
+            expect(daemonStub.rpcCmd).to.have.been.calledOnce;
           });
         });
       });
 
       describe('When a transaction has -1 confirmations', () => {
         beforeEach(() => {
-          daemonStub.cmd.onCall(0).callsArgWith(2, [{ response: { confirmations: -1 } }]);
-          daemonStub.cmd.onCall(1).callsArgWith(2, 'sendmany response');
+          daemonStub.rpcCmd.onCall(0).resolves([{ response: { confirmations: -1 } }]);
+          daemonStub.rpcCmd.onCall(1).resolves('sendmany response');
         });
 
         it('tries to resend that transaction via daemon sendmany', () => {
           const promise = fixFailedPayments(env)();
           return expect(promise).to.eventually.be.rejected.then(() => {
-            const actual = daemonStub.cmd.getCall(1).args.slice(0, 2);
+            const actual = daemonStub.rpcCmd.getCall(1).args.slice(0, 2);
             expect(actual).to.eql(['sendmany', ['', 'paymentAmount1']]);
-            expect(daemonStub.cmd).to.have.callCount(2);
+            expect(daemonStub.rpcCmd).to.have.callCount(2);
           });
         });
 
         describe('When sendmany returns an rpc error', () => {
           const sendmanyErr = 'sendmany err';
           beforeEach(() => {
-            daemonStub.cmd.onCall(1).callsArgWith(2, { error: sendmanyErr });
+            daemonStub.rpcCmd.onCall(1).resolves({ error: sendmanyErr });
           });
 
           it('rejects without updating redis with new payments', () => {
@@ -127,7 +127,7 @@ describe('fixFailedPayments() - handle negative-confirmation payouts', () => {
         describe('When sendmany returns a result without a response property', () => {
           const sendmanyRaw = 'sendmany without response';
           beforeEach(() => {
-            daemonStub.cmd.onCall(1).callsArgWith(2, sendmanyRaw);
+            daemonStub.rpcCmd.onCall(1).resolves(sendmanyRaw);
           });
 
           it('rejects without updating redis with new payments', () => {
@@ -144,7 +144,7 @@ describe('fixFailedPayments() - handle negative-confirmation payouts', () => {
         describe('When sendmany returns a result with a response property', () => {
           const newTx = 'returned-txid';
           beforeEach(() => {
-            daemonStub.cmd.onCall(1).callsArgWith(2, { response: newTx });
+            daemonStub.rpcCmd.onCall(1).resolves({ response: newTx });
           });
 
           it('updates redis with new payments and current time', () => {

@@ -26,18 +26,36 @@ describe('immatureBlock() - prepareRounds category function', () => {
   });
 
   describe('for a non-soloMined round, with no lost shares', () => {
-    const round = { reward };
-    const shared = { [addr]: 10 };
-    const workers = { [addr]: {} };
-    const env = { workers, coinUtils, feeSatoshi };
-    const args = {
-      round, shared, times: {}, maxTime: 1
-    };
+    describe('with an existing worker', () => {
+      const round = { reward };
+      const shared = { [addr]: 10 };
+      const workers = { [addr]: {} };
+      const env = { workers, coinUtils, feeSatoshi };
+      const args = {
+        round, shared, times: {}, maxTime: 1
+      };
 
-    it('sets immature and rounShares keys on worker', () => {
-      immatureBlock(env)(args);
-      expect(workers[addr].roundShares).to.eql(10);
-      expect(workers[addr].immature).to.eql(1);
+      it('sets immature and roundShares keys on worker', () => {
+        immatureBlock(env)(args);
+        expect(workers[addr].roundShares).to.eql(10);
+        expect(workers[addr].immature).to.eql(1);
+      });
+    });
+
+    describe('with no previous existing workers', () => {
+      const round = { reward };
+      const shared = { [addr]: 10 };
+      const workers = { };
+      const env = { workers, coinUtils, feeSatoshi };
+      const args = {
+        round, shared, times: {}, maxTime: 1
+      };
+
+      it('sets immature and roundShares keys on a new worker', () => {
+        immatureBlock(env)(args);
+        expect(workers[addr].roundShares).to.eql(10);
+        expect(workers[addr].immature).to.eql(1);
+      });
     });
   });
 

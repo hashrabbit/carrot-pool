@@ -3,13 +3,13 @@ const sinon = require('sinon');
 
 const { expect } = require('../chai-local');
 
+const { CoinUtils } = require('../../src/payments/coin_utils');
+const { metricCoinInfo } = require('../helpers');
 const { confirmedBlock } = require('../../src/payments/confirmed_block');
 
 describe('confirmedBlock() - prepareRounds category function', () => {
-  const feeSatoshi = 0;
-  const coinsToSatoshies = sinon.stub().returnsArg(0);
-  const satoshisToCoins = sinon.stub().returnsArg(0);
-  const coinUtils = { coinsToSatoshies, satoshisToCoins };
+  const feeSatoshi = 1;
+  const coinUtils = new CoinUtils(metricCoinInfo);
   const reward = 0.5;
   const addr = 'AAAAAA';
 
@@ -25,7 +25,7 @@ describe('confirmedBlock() - prepareRounds category function', () => {
     it('sets reward, roundShares, and totalShares keys on worker', () => {
       confirmedBlock(env)(args);
       expect(workers[addr].roundShares).to.eql(1);
-      expect(workers[addr].reward).to.eql(1);
+      expect(workers[addr].reward).to.eql(4);
     });
   });
 
@@ -44,7 +44,7 @@ describe('confirmedBlock() - prepareRounds category function', () => {
     it('sets the correct key/value pairs on the worker object.', () => {
       confirmedBlock(env)(args);
       expect(workers[addr].roundShares).to.eql(10);
-      expect(workers[addr].records[1].amounts).to.eql(2);
+      expect(workers[addr].records[1].amounts).to.eql(1.4);
     });
   });
 
@@ -65,7 +65,7 @@ describe('confirmedBlock() - prepareRounds category function', () => {
       confirmedBlock(env)(args);
       expect(workers[addr].roundShares).to.eql(5);
       expect(workers[addr].records[1].shares).to.eql(10);
-      expect(workers[addr].records[1].amounts).to.eql(2);
+      expect(workers[addr].records[1].amounts).to.eql(1.4);
     });
   });
 
@@ -86,7 +86,7 @@ describe('confirmedBlock() - prepareRounds category function', () => {
       confirmedBlock(env)(args);
       expect(workers[addr].roundShares).to.eql(5);
       expect(workers[addr].records[1].shares).to.eql(10);
-      expect(workers[addr].records[1].amounts).to.eql(2);
+      expect(workers[addr].records[1].amounts).to.eql(1.4);
     });
   });
 });

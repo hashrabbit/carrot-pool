@@ -34,7 +34,7 @@ const adjustedShare = (env) => {
 
   return ([addr, shares]) => {
     const worker = findOrNew(workers, addr);
-    shares = parseFloat((shares || 0));
+    shares = parseFloat(shares || 0);
     worker.records = (worker.records || {});
     worker.records[round.height] = { shares, amounts: 0, times: 0 };
     if (maxTime > 0) {
@@ -65,8 +65,10 @@ const adjustedAmount = (env) => {
       logger.error(`Share percent is greater than 1.0 for ${addr} round:${round.height} blockHash:${round.blockHash}`);
       return;
     }
-    const totalAmount = Math.round(reward * percent);
-    worker.records[round.height].amounts = satoshisToCoins(totalAmount);
+    const rewardAmountSatoshis = Math.round(reward * percent);
+    const rewardAmountCoins = satoshisToCoins(rewardAmountSatoshis);
+    worker.records[round.height].amounts = rewardAmountCoins;
+    worker.reward = (worker.reward || 0) + rewardAmountSatoshis;
   };
 };
 
@@ -75,6 +77,8 @@ const confirmedBlock = (env) => {
   const { coinsToSatoshies, satoshisToCoins } = coinUtils;
 
   return ({ round, shared, solo, times, maxTime }) => {
+    // NOTE: worker.reward is in units of SATOSHIS
+    // NOTE: record.amounts is in units of COINS
     const reward = Math.round(coinsToSatoshies(round.reward) - feeSatoshi);
 
     // Check if Solo Mined
@@ -87,7 +91,7 @@ const confirmedBlock = (env) => {
       worker.records[round.height] = { shares, amounts, times: 1 };
       worker.roundShares = shares;
       worker.totalShares = parseFloat(worker.totalShares || 0) + shares;
-      worker.reward = (worker.reward || 0) + amounts;
+      worker.reward = (worker.reward || 0) + reward;
     } else {
       // Otherwise, calculate payout amounts for all workers that contributed to the block
 
