@@ -2,10 +2,10 @@ const { promisify } = require('util');
 const { describe, it, beforeEach, after } = require('mocha');
 const sinon = require('sinon');
 
-const { expect } = require('../chai-local');
-const { createClient } = require('../helpers');
+const { expect } = require('../../chai-local');
+const { createClient } = require('../../helpers');
 
-const { getWorkersRounds } = require('../../src/payments/get_workers_rounds');
+const { getWorkersRounds } = require('../../../src/payments/get_workers_rounds/');
 
 describe('getWorkersRounds() - processPayments pipeline function', () => {
   const client = createClient();
