@@ -1,9 +1,9 @@
 const { describe, it } = require('mocha');
 const sinon = require('sinon');
 
-const { expect } = require('../chai-local');
+const { expect } = require('../../chai-local');
 
-const { immatureBlock } = require('../../src/payments/immature_block');
+const { immatureBlock } = require('../../../src/payments/immature_block/');
 
 describe('immatureBlock() - prepareRounds category function', () => {
   const feeSatoshi = 0;
