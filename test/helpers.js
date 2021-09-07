@@ -1,4 +1,5 @@
 const redismock = require('redis-mock');
+const { promisify } = require('util');
 
 const { PoolLogger } = require('../src/logger');
 
@@ -12,6 +13,16 @@ const mockClient = (() => {
 })();
 
 const createClient = () => mockClient;
+
+const promisedClient = (client = createClient()) => (
+  {
+    flushall: promisify(client.flushall).bind(client),
+    hincrby: promisify(client.hincrby).bind(client),
+    hincrbyfloat: promisify(client.hincrbyfloat).bind(client),
+    sadd: promisify(client.sadd).bind(client),
+    smembers: promisify(client.smembers).bind(client),
+  }
+);
 
 const logger = new PoolLogger({
   logLevel: 'debug',
@@ -45,5 +56,11 @@ const responseStub = () => {
 };
 
 module.exports = {
-  createClient, logger, metricCoinInfo, swapProcess, restoreProcess, responseStub
+  createClient,
+  promisedClient,
+  logger,
+  metricCoinInfo,
+  swapProcess,
+  restoreProcess,
+  responseStub
 };

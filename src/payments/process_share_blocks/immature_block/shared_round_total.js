@@ -1,8 +1,8 @@
-const { requireDeps } = require('../../utils/require_deps');
+const { requireDeps } = require('../../../utils/require_deps');
 
 const defaultDeps = [
-  ['findOrNew', `${__dirname}/../utils`],
-  ['lostShares', `${__dirname}/lost_shares`]
+  ['findOrNew', `${__dirname}/../../utils`],
+  ['lostShares', `${__dirname}/../lost_shares`]
 ];
 
 const _sharedRoundTotal = (deps) => ({ workers, shared, times, maxTime }) => {

@@ -1,7 +1,7 @@
-const { requireDeps } = require('../../utils/require_deps');
+const { requireDeps } = require('../../../utils/require_deps');
 
 const defaultDeps = [
-  ['findOrNew', `${__dirname}/../utils`],
+  ['findOrNew', `${__dirname}/../../utils`],
   ['sharedRoundTotal', `${__dirname}/shared_round_total`]
 ];
 
@@ -11,8 +11,8 @@ const defaultDeps = [
 // reward, based on the percentage of the share "work" they contributed.
 const _immatureBlock = (deps) => (env) => (args) => {
   const { findOrNew, sharedRoundTotal } = deps;
-  const { workers, coinUtils, feeSatoshi } = env;
-  const { round, shared, solo, times, maxTime } = args;
+  const { coinUtils, feeSatoshi } = env;
+  const { workers, round, shared, solo, times, maxTime } = args;
   const reward = Math.round(coinUtils.coinsToSatoshies(round.reward) - feeSatoshi);
 
   // Check if Solo Mined

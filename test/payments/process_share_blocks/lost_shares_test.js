@@ -2,7 +2,9 @@ const { describe, it } = require('mocha');
 
 const { expect } = require('../../chai-local');
 
-const { lostShares } = require('../../../src/payments/immature_block/lost_shares');
+const { lostShares } = require(
+  '../../../src/payments/process_share_blocks/lost_shares'
+);
 
 describe('lostShares() - based on time mining, calculate amount contributed shares "lost"', () => {
   const shares = 10;

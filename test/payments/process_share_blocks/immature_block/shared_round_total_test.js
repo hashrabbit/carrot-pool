@@ -1,9 +1,11 @@
 const { describe, it } = require('mocha');
 
-const { expect } = require('../../chai-local');
+const { expect } = require('../../../chai-local');
 
-const { _sharedRoundTotal } = require('../../../src/payments/immature_block/shared_round_total');
-const { findOrNew } = require('../../../src/payments/utils');
+const { findOrNew } = require('../../../../src/payments/utils');
+const { _sharedRoundTotal } = require(
+  '../../../../src/payments/process_share_blocks/immature_block/shared_round_total'
+);
 
 describe('sharedRoundTotal() - calculate adjusted shares for workers in a round', () => {
   const addrs = ['AAAAAA', 'BBBBBB'];

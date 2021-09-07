@@ -1,9 +1,11 @@
 const { describe, it } = require('mocha');
 const sinon = require('sinon');
 
-const { expect } = require('../../chai-local');
+const { expect } = require('../../../chai-local');
 
-const { immatureBlock } = require('../../../src/payments/immature_block/');
+const { immatureBlock } = require(
+  '../../../../src/payments/process_share_blocks/immature_block'
+);
 
 describe('immatureBlock() - prepareRounds category function', () => {
   const feeSatoshi = 0;
@@ -15,8 +17,8 @@ describe('immatureBlock() - prepareRounds category function', () => {
     const round = { soloMined: true, workerAddress: addr, reward };
     const solo = { [addr]: 0 };
     const workers = { [addr]: {} };
-    const env = { workers, coinUtils, feeSatoshi };
-    const args = { round, solo };
+    const env = { coinUtils, feeSatoshi };
+    const args = { workers, round, solo };
 
     it('sets immature and roundShares keys on worker', () => {
       immatureBlock(env)(args);
@@ -30,9 +32,9 @@ describe('immatureBlock() - prepareRounds category function', () => {
       const round = { reward };
       const shared = { [addr]: 10 };
       const workers = { [addr]: {} };
-      const env = { workers, coinUtils, feeSatoshi };
+      const env = { coinUtils, feeSatoshi };
       const args = {
-        round, shared, times: {}, maxTime: 1
+        workers, round, shared, times: {}, maxTime: 1
       };
 
       it('sets immature and roundShares keys on worker', () => {
@@ -45,10 +47,10 @@ describe('immatureBlock() - prepareRounds category function', () => {
     describe('with no previous existing workers', () => {
       const round = { reward };
       const shared = { [addr]: 10 };
-      const workers = { };
-      const env = { workers, coinUtils, feeSatoshi };
+      const workers = {};
+      const env = { coinUtils, feeSatoshi };
       const args = {
-        round, shared, times: {}, maxTime: 1
+        workers, round, shared, times: {}, maxTime: 1
       };
 
       it('sets immature and roundShares keys on a new worker', () => {
@@ -64,9 +66,9 @@ describe('immatureBlock() - prepareRounds category function', () => {
     const shared = { [addr]: 10 };
     const workers = { [addr]: {} };
     const times = { [addr]: 0.5 };
-    const env = { workers, coinUtils, feeSatoshi };
+    const env = { coinUtils, feeSatoshi };
     const args = {
-      round, shared, times, maxTime: 1
+      workers, round, shared, times, maxTime: 1
     };
 
     it('sets immature and roundShares keys on worker', () => {
