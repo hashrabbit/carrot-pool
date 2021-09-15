@@ -21,63 +21,6 @@ const findOrNew = (obj, key) => {
   return value;
 };
 
-// Check for Block Duplicates
-const isDuplicateBlockHeight = (rounds, height) => {
-  const dups = rounds.filter((round) => round.height === height);
-  return dups.length > 1;
-};
-
-// Validate Address from Daemon
-const validateAddress = async (daemon, address, command, logger, callback) => {
-  daemon.cmd(command, [address], (result) => {
-    if (result.error) {
-      logger.error(`Error with payment processing daemon ${JSON.stringify(result.error)}`);
-      callback(true);
-    } else if (!result.response || !result.response.ismine) {
-      daemon.cmd('getaddressinfo', [address], (innerRes) => {
-        if (innerRes.error) {
-          logger.error(`Error with payment processing daemon, getaddressinfo failed ... ${JSON.stringify(innerRes.error)}`);
-          callback(true);
-        } else if (!innerRes.response || !innerRes.response.ismine) {
-          logger.error(
-            `Daemon does not own pool address - payment processing can not be done with this daemon, ${
-              JSON.stringify(innerRes.response)}`
-          );
-          callback(true);
-        } else {
-          callback();
-        }
-      }, true);
-    } else {
-      callback();
-    }
-  }, true);
-};
-
-// Validate Balance from Daemon
-const getBalance = async (daemon, logger, minimumPayment, callback) => {
-  let minPaymentSatoshis;
-  let magnitude;
-  let coinPrecision;
-
-  daemon.cmd('getbalance', [], (result) => {
-    if (result.error) {
-      callback(true);
-      return;
-    }
-    try {
-      const d = result.data.split('result":')[1].split(',')[0].split('.')[1];
-      magnitude = parseInt(`10${new Array(d.length).join('0')}`, 10);
-      minPaymentSatoshis = parseInt(minimumPayment * magnitude, 10);
-      coinPrecision = magnitude.toString().length - 1;
-      callback(false, { minPaymentSatoshis, magnitude, coinPrecision });
-    } catch (e) {
-      logger.error(`Error detecting number of satoshis in a coin, cannot do payment processing. Tried parsing: ${result.data}`);
-      callback(true);
-    }
-  }, true, true);
-};
-
 // Check for Failed Payments
 const fixFailedPayments = (redisClient, daemon, logger, coin) => {
   redisClient.zrange(`${coin}:payments:payments`, -5, -5, (err, results) => {
@@ -139,9 +82,6 @@ const calculateTotalOwed = (env) => {
 module.exports = {
   roundTo,
   findOrNew,
-  isDuplicateBlockHeight,
-  validateAddress,
-  getBalance,
   fixFailedPayments,
   calculateTotalOwed
 };

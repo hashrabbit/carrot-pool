@@ -1,8 +1,7 @@
 const { requireDeps } = require('../utils/require_deps');
 
 const defaultDeps = [
-  ['dupsInvalidator', `${__dirname}/dups_invalidator`],
-  ['getWorkersRounds', `${__dirname}/get_workers_rounds`],
+  ['initializePayouts', `${__dirname}/initialize_payouts`],
   ['validateTransactions', `${__dirname}/validate_transactions`],
   ['processShareBlocks', `${__dirname}/process_share_blocks`],
   ['calculatePayments', `${__dirname}/calculate_payments`],
@@ -14,23 +13,12 @@ const defaultDeps = [
 // to determine payment amounts and produce payout transactions for the
 // blockchain.
 const baseProcessPayments = (deps) => (env) => (paymentMode, lastInterval) => {
-  const { dupsInvalidator,
-    getWorkersRounds,
-    validateTransactions,
-    processShareBlocks,
-    calculatePayments,
-    manageSentPayments,
-    fixFailedPayments } = deps;
+  const { initializePayouts, validateTransactions, processShareBlocks } = deps;
+  const { calculatePayments, manageSentPayments, fixFailedPayments } = deps;
 
-  const subEnv = {
-    ...env,
-    paymentMode,
-    lastInterval,
-    // TODO: Move to get_workers_rounds.js when we can access defaultDeps
-    invalidateDups: dupsInvalidator(env)
-  };
+  const subEnv = { ...env, paymentMode, lastInterval };
 
-  return getWorkersRounds(subEnv)
+  return initializePayouts(subEnv)
     .then(validateTransactions(subEnv))
     .then(processShareBlocks(subEnv))
     .then(calculatePayments(subEnv))

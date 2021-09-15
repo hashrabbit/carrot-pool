@@ -1,20 +1,14 @@
 const { describe, it, beforeEach } = require('mocha');
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 
-const { expect } = chai;
+const { expect } = require('../chai-local');
 const { _processPayments } = require('../../src/payments/process_payments');
-
-chai.use(chaiAsPromised);
 
 describe('processPayments() - asynchronously handle a round of worker payouts based on mined shares', () => {
   let stubs;
   let env;
 
-  let dupsInvalidatorStub;
-  let dupsInvalidatorEnvStub;
-  let getWorkersRoundsEnvStub;
+  let initializePayoutsEnvStub;
   let validateTransactionsStub;
   let validateTransactionsEnvStub;
   let processShareBlocksStub;
@@ -27,11 +21,7 @@ describe('processPayments() - asynchronously handle a round of worker payouts ba
   let fixFailedPaymentsEnvStub;
 
   beforeEach(() => {
-    dupsInvalidatorStub = sinon.stub();
-    dupsInvalidatorEnvStub = sinon.stub();
-    dupsInvalidatorEnvStub.returns(dupsInvalidatorStub);
-
-    getWorkersRoundsEnvStub = sinon.stub();
+    initializePayoutsEnvStub = sinon.stub();
 
     validateTransactionsStub = sinon.stub();
     validateTransactionsEnvStub = sinon.stub();
@@ -54,8 +44,7 @@ describe('processPayments() - asynchronously handle a round of worker payouts ba
     fixFailedPaymentsEnvStub.returns(fixFailedPaymentsStub);
 
     stubs = {
-      dupsInvalidator: dupsInvalidatorEnvStub,
-      getWorkersRounds: getWorkersRoundsEnvStub,
+      initializePayouts: initializePayoutsEnvStub,
       validateTransactions: validateTransactionsEnvStub,
       processShareBlocks: processShareBlocksEnvStub,
       calculatePayments: calculatePaymentsEnvStub,
@@ -68,7 +57,7 @@ describe('processPayments() - asynchronously handle a round of worker payouts ba
 
   describe('coordinating dependencies', () => {
     beforeEach(() => {
-      getWorkersRoundsEnvStub.resolves('gwrOutput');
+      initializePayoutsEnvStub.resolves('gwrOutput');
       validateTransactionsStub.resolves('valTxOutput');
       processShareBlocksStub.resolves('psbOutput');
       calculatePaymentsStub.resolves('calcOutput');
@@ -92,12 +81,9 @@ describe('processPayments() - asynchronously handle a round of worker payouts ba
         ...env,
         paymentMode: 'paymentMode',
         lastInterval: 'lastInterval',
-        invalidateDups: dupsInvalidatorStub
       };
       const promise = _processPayments(stubs)(env)('paymentMode', 'lastInterval');
       return expect(promise).to.eventually.eql('ffpOutput').then(() => {
-        expect(stubs.dupsInvalidator).to.have.been.calledWith(env);
-        delete stubs.dupsInvalidator;
         Object.values(stubs).forEach((subEnvStub) => {
           expect(subEnvStub).to.have.been.calledWith(expectedSubEnv);
         });
