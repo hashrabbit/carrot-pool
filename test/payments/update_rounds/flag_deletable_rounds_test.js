@@ -1,8 +1,10 @@
 const { describe, it } = require('mocha');
 
-const { expect } = require('../chai-local');
+const { expect } = require('../../chai-local');
 
-const { flagDeletableRounds } = require('../../src/payments/flag_deletable_rounds');
+const { flagDeletableRounds } = require(
+  '../../../src/payments/update_rounds/flag_deletable_rounds'
+);
 
 describe('flagDeletableRounds() - validateTransactions sub-function', () => {
   describe('orphan round without a duplicate height', () => {

@@ -2,7 +2,7 @@ const { requireDeps } = require('../utils/require_deps');
 
 const defaultDeps = [
   ['initializePayouts', `${__dirname}/initialize_payouts`],
-  ['validateTransactions', `${__dirname}/validate_transactions`],
+  ['updateRounds', `${__dirname}/update_rounds`],
   ['processShareBlocks', `${__dirname}/process_share_blocks`],
   ['calculatePayments', `${__dirname}/calculate_payments`],
   ['manageSentPayments', `${__dirname}/manage_sent_payments`],
@@ -12,16 +12,16 @@ const defaultDeps = [
 // Periodic background process that processes all share and worker data
 // to determine payment amounts and produce payout transactions for the
 // blockchain.
-const baseProcessPayments = (deps) => (env) => (paymentMode, lastInterval) => {
-  const { initializePayouts, validateTransactions, processShareBlocks } = deps;
+const baseProcessPayments = (deps) => (env) => async (paymentMode, lastInterval) => {
+  const { initializePayouts, updateRounds, processShareBlocks } = deps;
   const { calculatePayments, manageSentPayments, fixFailedPayments } = deps;
 
   const subEnv = { ...env, paymentMode, lastInterval };
 
-  return initializePayouts(subEnv)
-    .then(validateTransactions(subEnv))
-    .then(processShareBlocks(subEnv))
-    .then(calculatePayments(subEnv))
+  const { workers, rounds } = await initializePayouts(subEnv);
+  await updateRounds(subEnv)(rounds);
+  await processShareBlocks(subEnv)({ workers, rounds });
+  return calculatePayments(subEnv)({ workers, rounds })
     .then(manageSentPayments(subEnv))
     .then(fixFailedPayments(subEnv));
 };

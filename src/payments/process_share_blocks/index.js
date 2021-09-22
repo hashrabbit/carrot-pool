@@ -30,7 +30,7 @@ const buildLocalEnv = (env) => {
 const _processShareBlocks = (deps) => (env) => async (args) => {
   const { fetchRoundTimes, fetchRoundShares, checkPaymentFunds } = deps;
   const { separateRounds, processAutoRounds, moveManualRounds } = deps;
-  const { workers, rounds, addressAccount } = args;
+  const { workers, rounds } = args;
   const localEnv = buildLocalEnv(env);
 
   // Fetch the individual time durations, and the submitted share difficulty
@@ -52,10 +52,6 @@ const _processShareBlocks = (deps) => (env) => async (args) => {
   processAutoRounds(localEnv)({
     workers, rounds: autoRounds, times, solo, shared
   });
-
-  // Pass the adjusted workers and rounds objects on to the next function in the
-  // promise chain.
-  return { workers, rounds, addressAccount };
 };
 
 module.exports = {

@@ -8,9 +8,10 @@ describe('processPayments() - asynchronously handle a round of worker payouts ba
   let stubs;
   let env;
 
+  let initOutput;
   let initializePayoutsEnvStub;
-  let validateTransactionsStub;
-  let validateTransactionsEnvStub;
+  let updateRoundsStub;
+  let updateRoundsEnvStub;
   let processShareBlocksStub;
   let processShareBlocksEnvStub;
   let calculatePaymentsStub;
@@ -23,9 +24,9 @@ describe('processPayments() - asynchronously handle a round of worker payouts ba
   beforeEach(() => {
     initializePayoutsEnvStub = sinon.stub();
 
-    validateTransactionsStub = sinon.stub();
-    validateTransactionsEnvStub = sinon.stub();
-    validateTransactionsEnvStub.returns(validateTransactionsStub);
+    updateRoundsStub = sinon.stub();
+    updateRoundsEnvStub = sinon.stub();
+    updateRoundsEnvStub.returns(updateRoundsStub);
 
     processShareBlocksStub = sinon.stub();
     processShareBlocksEnvStub = sinon.stub();
@@ -45,7 +46,7 @@ describe('processPayments() - asynchronously handle a round of worker payouts ba
 
     stubs = {
       initializePayouts: initializePayoutsEnvStub,
-      validateTransactions: validateTransactionsEnvStub,
+      updateRounds: updateRoundsEnvStub,
       processShareBlocks: processShareBlocksEnvStub,
       calculatePayments: calculatePaymentsEnvStub,
       manageSentPayments: manageSentPaymentsEnvStub,
@@ -57,9 +58,10 @@ describe('processPayments() - asynchronously handle a round of worker payouts ba
 
   describe('coordinating dependencies', () => {
     beforeEach(() => {
-      initializePayoutsEnvStub.resolves('gwrOutput');
-      validateTransactionsStub.resolves('valTxOutput');
-      processShareBlocksStub.resolves('psbOutput');
+      initOutput = { workers: 'initW', rounds: 'initR' };
+      initializePayoutsEnvStub.resolves(initOutput);
+      updateRoundsStub.resolves();
+      processShareBlocksStub.resolves();
       calculatePaymentsStub.resolves('calcOutput');
       manageSentPaymentsStub.resolves('mspOutput');
       fixFailedPaymentsStub.resolves('ffpOutput');
@@ -68,9 +70,9 @@ describe('processPayments() - asynchronously handle a round of worker payouts ba
     it('chains its outputs together', () => {
       const promise = _processPayments(stubs)(env)('paymentMode', 'lastInterval');
       return expect(promise).to.eventually.eql('ffpOutput').then(() => {
-        expect(validateTransactionsStub).to.have.been.calledWith('gwrOutput');
-        expect(processShareBlocksStub).to.have.been.calledWith('valTxOutput');
-        expect(calculatePaymentsStub).to.have.been.calledWith('psbOutput');
+        expect(updateRoundsStub).to.have.been.calledWith('initR');
+        expect(processShareBlocksStub).to.have.been.calledWith(initOutput);
+        expect(calculatePaymentsStub).to.have.been.calledWith(initOutput);
         expect(manageSentPaymentsStub).to.have.been.calledWith('calcOutput');
         expect(fixFailedPaymentsStub).to.have.been.calledWith('mspOutput');
       });
