@@ -38,7 +38,7 @@ describe('processShareBlocks() - A processPayments promise chain function', () =
     const workers = { [addr]: { balance: 3 } };
     const shareJSON = JSON.stringify({ time: height, worker: addr, soloMined: true });
     const unspent = { address: addr, amount: 1.5 };
-    const data = { responses: [unspent] };
+    const data = { response: [unspent] };
     const daemon = { rpcCmd: sinon.stub().resolves([data]) };
 
     const env = {

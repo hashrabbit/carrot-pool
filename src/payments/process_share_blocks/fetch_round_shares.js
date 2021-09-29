@@ -29,7 +29,7 @@ const _fetchRoundShares = ({ promiseExec }) => (env) => async (rounds) => {
   const shared = [];
 
   const commands = rounds.map((r) => ['hgetall', `${coin}:shares:round${r.height}`]);
-  const failMsg = 'fetchRoundTimes: Error retrieving round shares';
+  const failMsg = 'fetchRoundShares: Error retrieving round shares';
   const roundShares = await promiseExec({ client, logger })({ commands, failMsg });
 
   roundShares.forEach((round) => {

@@ -12,12 +12,12 @@ describe('sharedRoundTotal() - calculate adjusted shares for workers in a round'
   const addrs = ['AAAAAA', 'BBBBBB'];
   const logger = { error: sinon.stub().returnsArg(0) };
   const workers = {};
-  const env = { logger, workers };
+  const env = { logger };
 
   describe('for a round with 1 worker and no maxTime', () => {
     const shared = { [addrs[0]]: 10 };
     const args = {
-      round, shared, times: {}, maxTime: 0
+      workers, round, shared, times: {}, maxTime: 0
     };
 
     it('returns zero for total shares and worker.roundShares', () => {
@@ -31,7 +31,7 @@ describe('sharedRoundTotal() - calculate adjusted shares for workers in a round'
     const shared = { [addrs[0]]: 10, [addrs[1]]: 10 };
     const times = { [addrs[0]]: 40, [addrs[1]]: 50 };
     const args = {
-      round, shared, times, maxTime: 100
+      workers, round, shared, times, maxTime: 100
     };
 
     it('returns the adjusted total shares and sets worker.roundShares', () => {
@@ -46,7 +46,7 @@ describe('sharedRoundTotal() - calculate adjusted shares for workers in a round'
     const shared = { [addrs[0]]: 10 };
     const times = { [addrs[0]]: 101 };
     const args = {
-      round, shared, times, maxTime: 100
+      workers, round, shared, times, maxTime: 100
     };
 
     it('returns 0 total shares and logs an error message', () => {

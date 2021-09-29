@@ -13,7 +13,7 @@ describe('listUnspent() - wraps daemon.cmd("listunspent") RPC call', () => {
   const minConfPayout = 1;
 
   describe('with no unspent transactions & displayBool = true', () => {
-    const data = { responses: [] };
+    const data = { response: [] };
     const daemon = { rpcCmd: sinon.stub().resolves([data]) };
     const logger = {
       error: sinon.stub().returnsArg(0),
@@ -33,7 +33,7 @@ describe('listUnspent() - wraps daemon.cmd("listunspent") RPC call', () => {
 
   describe('with 1 unspent transaction & displayBool = false', () => {
     const unspent = { address: 'AAAA', amount: 1.5 };
-    const data = { responses: [unspent] };
+    const data = { response: [unspent] };
     const daemon = { rpcCmd: sinon.stub().resolves([data]) };
     const logger = {
       error: sinon.stub().returnsArg(0),

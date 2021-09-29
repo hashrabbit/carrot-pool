@@ -8,8 +8,8 @@ const defaultDeps = [
 // based on their portion of shares contributed. If a worker's % is > 1.0, log
 // an error, and that worker receives no payout.
 const _computeSharedPayouts = ({ findOrNew }) => (env) => (args) => {
-  const { logger, workers, coinUtils } = env;
-  const { shared, round, totalShares, reward } = args;
+  const { logger, coinUtils } = env;
+  const { workers, shared, round, totalShares, reward } = args;
 
   Object.keys(shared).forEach((addr) => {
     const worker = findOrNew(workers, addr);

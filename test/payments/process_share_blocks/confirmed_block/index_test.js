@@ -38,11 +38,9 @@ describe('confirmedBlock() - prepareRounds category function', () => {
     const shared = { [addr]: 10 };
     const workers = { [addr]: {} };
     const logger = { error: sinon.stub().returnsArg(0) };
-    const env = {
-      logger, workers, coinUtils, feeSatoshi
-    };
+    const env = { logger, coinUtils, feeSatoshi };
     const args = {
-      round, shared, times: {}, maxTime: 1
+      workers, round, shared, times: {}, maxTime: 1
     };
 
     it('correctly updates the worker object', () => {

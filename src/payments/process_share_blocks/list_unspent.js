@@ -14,7 +14,7 @@ const listUnspent = (env) => async (displayBool = false) => {
 
   // Sum all of the transaction amounts and round to the nearest "satoshi".
   const balance = coinsRound(
-    data.responses.reduce((sum, r) => sum + parseFloat(r.amount || 0), 0)
+    data.response.reduce((sum, r) => sum + parseFloat(r.amount || 0), 0)
   );
 
   if (displayBool) { logger.special(`${addr} balance of ${balance}`); }

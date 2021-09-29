@@ -17,9 +17,9 @@ describe('computeSharedPayouts() - confirmedBlock support function', () => {
   describe('for a worker who contributed 60% of the total shares', () => {
     const logger = { error: sinon.stub().returnsArg(0) };
     const worker = { roundShares: 60, records: { [round.height]: {} } };
-    const env = { logger, workers: { [addr]: worker }, coinUtils };
+    const env = { logger, coinUtils };
     const args = {
-      shared: { [addr]: 1 }, round, totalShares, reward
+      workers: { [addr]: worker }, shared: { [addr]: 1 }, round, totalShares, reward
     };
 
     it('sets a reward amount reduced by 60%', () => {
@@ -31,9 +31,9 @@ describe('computeSharedPayouts() - confirmedBlock support function', () => {
   describe('for a worker who contributed > 100% of the total shares', () => {
     const logger = { error: sinon.stub().returnsArg(0) };
     const worker = { roundShares: 101 };
-    const env = { logger, workers: { [addr]: worker }, coinUtils };
+    const env = { logger, coinUtils };
     const args = {
-      shared: { [addr]: 1 }, round, totalShares, reward
+      workers: { [addr]: worker }, shared: { [addr]: 1 }, round, totalShares, reward
     };
 
     it('logs an error', () => {

@@ -9,8 +9,8 @@ const defaultDeps = [
 // shared mining. Returns the total shares for the shared round.
 const _sharedRoundTotal = (deps) => (env) => (args) => {
   const { findOrNew, lostShares } = deps;
-  const { logger, workers } = env;
-  const { round, shared, times, maxTime } = args;
+  const { logger } = env;
+  const { workers, round, shared, times, maxTime } = args;
 
   let totalShares = 0;
 

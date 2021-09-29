@@ -33,11 +33,11 @@ const _confirmedBlock = (deps) => (env) => (args) => {
     // Otherwise, calculate payout amounts for all workers that contributed to the block
     const workerTimes = adjustRoundTimes(times, maxTime);
     const totalArgs = {
-      round, shared, times: workerTimes, maxTime
+      workers, round, shared, times: workerTimes, maxTime
     };
     const totalShares = sharedRoundTotal(env)(totalArgs);
     const payoutsArgs = {
-      round, shared, totalShares, reward
+      workers, round, shared, totalShares, reward
     };
     computeSharedPayouts(env)(payoutsArgs);
   }
