@@ -1,0 +1,59 @@
+version: "3.9"
+services:
+  app:
+    build: ../.
+    ports:
+      - "3010:3010"
+    configs:
+      - source: app_pool
+        target: "/src/pool_config.json"
+      - source: app_server
+        target: "/src/server_config.json"
+
+  redis:
+    image: redis
+
+  regtest01:
+    image: bitcoinsv/bitcoin-sv
+    entrypoint: "bitcoind -conf=/etc/bitcoin.conf -data-dir=/data"
+    configs:
+      - source: regtest01
+        target: "/etc/bitcoin.conf"
+    volumes:
+      - "regtest01:/data/"
+
+  regtest02:
+    image: bitcoinsv/bitcoin-sv
+    entrypoint: "bitcoind -conf=/etc/bitcoin.conf -data-dir=/data"
+    configs:
+      - source: regtest02
+        target: "/etc/bitcoin.conf"
+    volumes:
+      - "regtest02:/data/"
+
+  cpuminer:
+    image: tpruvot/cpuminer-multi
+    command: [
+      "-a", "sha256d",
+      "-o", "stratum+tcp://app:3010",
+      "-u", "mg3Brq4Kj9wDhEq4gkMFbTyJwp5yipKrkw.worker.1",
+      "-p", "pw.worker.1",
+      "-t", "4",
+      "--no-longpoll",
+      "--no-getwork",
+      "--no-gbt",
+      "-D",
+      "-P"]
+
+volumes:
+  regtest01: {}
+  regtest02: {}
+configs:
+  regtest01:
+    file: ./conf/regtest01.conf
+  regtest02:
+    file: ./conf/regtest02.conf
+  app_pool:
+    file: ./conf/pool_config.json
+  app_server:
+    file: ./conf/server_config.json
